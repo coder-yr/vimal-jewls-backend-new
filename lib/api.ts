@@ -71,7 +71,7 @@ const products = [
     rating: 4.5,
     reviews: 20,
     images: [
-      { src: "https://www.candere.com/media/catalog/product/C/0/C011234_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Floral Gold Ring" }
+      { src: "https://www.candere.com/media/jewellery/images/KC01124__1.jpeg", alt: "Floral Gold Ring" }
     ],
     badges: ["TRENDING"],
     youMayAlsoLike: [

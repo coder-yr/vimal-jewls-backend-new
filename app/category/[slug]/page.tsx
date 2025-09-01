@@ -275,6 +275,7 @@ const productCategories = {
         reviews: 20,
         imageQuery: "floral design gold ring",
         badge: "TRENDING",
+        image: "https://www.candere.com/media/jewellery/images/KC01124__1.jpeg"
       },
     ],
   },
