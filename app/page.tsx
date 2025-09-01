@@ -112,7 +112,7 @@ export default function Component() {
                 className="object-cover w-full h-full rounded-full shadow-xl"
               />
             </div>
-            \
+            
           </div>
         </section>
 
