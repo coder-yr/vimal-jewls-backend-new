@@ -263,6 +263,7 @@ const productCategories = {
         reviews: 50,
         imageQuery: "classic solitaire diamond ring",
         badge: "BESTSELLER",
+        image: "https://www.candere.com/media/jewellery/images/KC05017YG_1.jpeg"
       },
       {
         id: "floral-gold-ring",
@@ -303,6 +304,7 @@ const productCategories = {
         reviews: 30,
         imageQuery: "diamond heart pendant necklace",
         badge: "BESTSELLER",
+        image: "https://www.candere.com/media/jewellery/images/KC03591__1.jpeg"
       },
       {
         id: "gold-chain-with-pearl",
@@ -314,6 +316,7 @@ const productCategories = {
         reviews: 18,
         imageQuery: "gold chain with pearl necklace",
         badge: "LIMITED DEAL",
+        image:"https://www.candere.com/media/jewellery/images/C019604_1_1.jpeg",
       },
     ],
   },
@@ -343,6 +346,7 @@ const productCategories = {
         reviews: 25,
         imageQuery: "diamond tennis bracelet",
         badge: "BESTSELLER",
+        image: "https://www.candere.com/media/jewellery/images/c021371_1.jpeg"
       },
       {
         id: "gold-kada-bracelet",
@@ -354,6 +358,7 @@ const productCategories = {
         reviews: 15,
         imageQuery: "gold kada bracelet",
         badge: "TRENDING",
+        image:"https://www.candere.com/media/jewellery/images/KC06407PLT_Creative.jpeg"
       },
     ],
   },

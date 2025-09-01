@@ -328,13 +328,8 @@ const products = [
   },
 ];
 
-export default function ProductDetailClient({ id }: { id: string }) {
-  // In a real application, you would fetch product data based on id
-  // For this example, we're using static dummyData
-
-  
+export default function ProductDetailClient({ product }: { product: any }) {
   const router = useRouter();
-  const product = products.find((p) => p.id === id) || products[1]; // Fallback to first product if not found
   const [selectedImage, setSelectedImage] = useState(product.images[0].src);
   const dispatch = useDispatch();
 
