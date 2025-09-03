@@ -40,6 +40,10 @@ import { SectionHeader } from "@/components/section-header";
 import { ProductSummaryCard } from "@/components/product-summary-card";
 import { HelpCard } from "@/components/help-card";
 import { PriceBreakupAccordion } from "@/components/price-breakup-accordion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Carousel } from "@/components/ui/carousel";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -450,34 +454,20 @@ export default function ProductDetailClient({ product }: { product: any }) {
       <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 max-w-7xl mx-auto w-full">
         {/* Left Section - Product Images */}
         <div className="flex-1 flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative w-full aspect-square border border-gray-200 rounded-lg overflow-hidden">
-              <Image
-                src={selectedImage || "/placeholder.svg"} // Main image
-                alt={product.images[0].alt}
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              {product.images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className={`relative w-full aspect-square border rounded-lg overflow-hidden cursor-pointer hover:border-[#009999] ${
-                    selectedImage === img.src ? "border-2 border-[#FADDA0]" : ""
-                  }`}
-                  onClick={() => setSelectedImage(img.src)}
-                >
-                  <Image
-                    src={img.src || "/placeholder.svg"}
-                    alt={img.alt}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Image Gallery with Carousel and Zoom */}
+          <Carousel>
+            {product.images.map((img: { src: string; alt: string }, idx: number) => (
+              <Zoom key={idx}>
+                <Image
+                  src={img.src || "/placeholder.svg"}
+                  alt={img.alt}
+                  width={500}
+                  height={500}
+                  className="object-contain rounded-lg"
+                />
+              </Zoom>
+            ))}
+          </Carousel>
         </div>
         {/* Right Section - Product Details Card */}
         <div className="flex-1 flex flex-col gap-6 bg-white rounded-xl shadow-lg p-8">
@@ -501,7 +491,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
             <ChevronDown className="ml-1 w-4 h-4" />
           </Button>
           <div className="flex gap-2 mb-2">
-            {product.badges.map((badge) => (
+            {product.badges.map((badge: string) => (
               <span
                 key={badge}
                 className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -647,10 +637,14 @@ export default function ProductDetailClient({ product }: { product: any }) {
               </div>
             </div>
             <ProductSummaryCard
-              data={Object.entries(product.productSummary || {}).reduce((acc: Record<string, string>, [key, value]) => {
-                acc[key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())] = value ? String(value) : "N/A";
-                return acc;
-              }, {})}
+              data={Object.entries(product.productSummary || {}).reduce(
+                (acc: Record<string, string>, [key, value]) => {
+                  acc[key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())] =
+                    value ? String(value) : "N/A";
+                  return acc;
+                },
+                {}
+              )}
               note={<p className="text-xs text-gray-500">*Difference in gold weight may occur & will apply on final price.</p>}
             />
             <HelpCard />
@@ -684,6 +678,64 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </div>
         ))}
       </div>
+      {/* Tabbed Layout for Specifications */}
+      <Tabs defaultValue="description" className="mt-8">
+        <TabsList className="flex justify-center bg-gray-100 p-2 rounded-lg shadow-md">
+          <TabsTrigger value="description" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
+            <span className="flex items-center gap-2">
+              <Book className="w-4 h-4" /> Description
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="specifications" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
+            <span className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" /> Specifications
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="reviews" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
+            <span className="flex items-center gap-2">
+              <Star className="w-4 h-4" /> Reviews
+            </span>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="description" className="p-4 bg-white rounded-lg shadow-md">
+          <p className="text-gray-700 leading-relaxed">{product.description}</p>
+        </TabsContent>
+        <TabsContent value="specifications" className="p-4 bg-white rounded-lg shadow-md">
+          <ul className="space-y-2">
+            {Object.entries(product.productSummary || {}).map(([key, value]) => (
+              <li key={key} className="text-sm flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>
+                  <strong>{key}:</strong> {String(value)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </TabsContent>
+        <TabsContent value="reviews" className="p-4 bg-white rounded-lg shadow-md">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Customer Reviews</h3>
+            {product.reviews && product.reviews.length > 0 ? (
+              product.reviews.map((review: { comment: string; author: string; rating: number }, idx: number) => (
+                <div key={idx} className="border-b py-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    {[...Array(5)].map((_, starIdx) => (
+                      <Star
+                        key={starIdx}
+                        className={`w-4 h-4 ${starIdx < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm">{review.comment}</p>
+                  <p className="text-xs text-gray-500">- {review.author}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No reviews yet.</p>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
