@@ -1,28 +1,29 @@
-"use client"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { getCartTotal } from "@/lib/cart-utils" // Keep getCartTotal
-import { CheckoutProgress } from "@/components/checkout-progress"
-import { X, Truck, Gift, CheckCircle, Star, ChevronLeft, Clock } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { useRouter } from "next/navigation"
-import { useSelector, useDispatch } from "react-redux" // Import useSelector and useDispatch
-import type { RootState } from "@/lib/store" // Import RootState
-import { removeFromCart } from "@/lib/features/cart/cartSlice" // Import removeFromCart action
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getCartTotal } from "@/lib/cart-utils";
+import { CheckoutProgress } from "@/components/checkout-progress";
+import { X, Truck, CheckCircle, ChevronLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/lib/store";
+import { removeFromCart } from "@/lib/features/cart/cartSlice";
 
 export default function CheckoutPage() {
-  const router = useRouter()
-  const dispatch = useDispatch()
-  const cartItems = useSelector((state: RootState) => state.cart.items) // Get cart items from Redux store
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleRemoveItem = (id: string) => {
-    dispatch(removeFromCart(id)) // Dispatch removeFromCart action
-  }
+    dispatch(removeFromCart(id));
+  };
 
-  const subtotal = getCartTotal(cartItems)
-  const discount = 1089 // Mock discount
-  const total = subtotal - discount
+  const subtotal = getCartTotal(cartItems);
+  const discount = 1089;
+  const total = subtotal - discount;
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
@@ -44,7 +45,7 @@ export default function CheckoutPage() {
                 className="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0"
               >
                 <Image
-                  src={"https://www.candere.com/media/jewellery/images/C025336_2.jpeg"}
+                  src={item.image}
                   alt={item.name}
                   width={100}
                   height={100}
@@ -53,6 +54,7 @@ export default function CheckoutPage() {
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">{item.name}</h3>
                   <p className="text-sm text-gray-600">Metal: {item.metal}</p>
+                  <p className="text-sm text-gray-600">Size: {item.size}</p>
                   <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                 </div>
                 <div className="flex flex-col items-end">
@@ -62,8 +64,7 @@ export default function CheckoutPage() {
                   <span className="text-lg font-bold text-[#009999]">₹{item.price.toLocaleString("en-IN")}</span>
                   <span className="text-sm text-gray-500 line-through">
                     ₹{(item.price + 1000).toLocaleString("en-IN")}
-                  </span>{" "}
-                  {/* Mock original price */}
+                  </span>
                 </div>
               </div>
             ))
@@ -107,10 +108,6 @@ export default function CheckoutPage() {
               <span>Discount (MONSOON)</span>
               <span className="text-green-600">-₹{discount.toLocaleString("en-IN")}</span>
             </div>
-            <div className="flex justify-between">
-              <span>Sub total</span>
-              <span>₹{subtotal.toLocaleString("en-IN")}</span>
-            </div>
             <Separator className="my-2" />
             <div className="flex justify-between text-xl font-bold text-[#009999]">
               <span>Order Total</span>
@@ -122,16 +119,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="text-center text-gray-700 text-sm mb-6">
-            <p className="mb-2">Have any queries ? Contact us for your assistance</p>
-            <p>
-              Call us at <span className="text-[#009999] font-semibold">+91 2261966262</span> or{" "}
-              <Button variant="link" className="text-[#009999] p-0 h-auto">
-                CHAT WITH US
-              </Button>
-            </p>
-          </div>
-
           <Button
             className="w-full bg-[#009999] text-white hover:bg-[#007a7a] py-3 rounded-md font-semibold"
             onClick={() => router.push("/checkout/address")}
@@ -141,82 +128,6 @@ export default function CheckoutPage() {
           </Button>
         </div>
       </div>
-
-      {/* Candere Advantages */}
-      <section className="bg-white py-12 px-4 md:px-8 text-center">
-        <h2 className="text-2xl font-bold mb-8">Candere Advantages</h2>
-        <p className="text-gray-600 mb-12">5 reasons to shop with us!</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
-          {[
-            { icon: Clock, text: "15 days Return" },
-            { icon: Star, text: "Trust of Kalyan" },
-            { icon: Truck, text: "Lifetime Buyback" },
-            { icon: CheckCircle, text: "100% Exchange*" },
-            { icon: Gift, text: "Certified Jewellery" },
-          ].map((item, index) => (
-            <div key={index} className="flex flex-col items-center text-gray-800">
-              <item.icon className="w-10 h-10 mb-3 text-[#009999]" />
-              <span className="text-sm font-medium">{item.text}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Customer Ratings & Payment Partners */}
-      <section className="bg-white py-8 px-4 md:px-8 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <span className="font-semibold">1 LAKH+ HAPPY CUSTOMERS HAVE RATED US</span>
-            <Image
-              src="/placeholder.svg?height=20&width=60"
-              alt="Google"
-              width={60}
-              height={20}
-              className="h-5 object-contain"
-            />
-            <span className="font-bold text-green-600">4.5</span>
-            <Image
-              src="/placeholder.svg?height=20&width=60"
-              alt="Sitejabber"
-              width={60}
-              height={20}
-              className="h-5 object-contain"
-            />
-            <span className="font-bold text-green-600">4.3</span>
-          </div>
-          <div className="flex flex-wrap justify-center md:justify-end items-center gap-4">
-            <span className="font-semibold">We Accept</span>
-            <Image
-              src="/placeholder.svg?height=20&width=40"
-              alt="Visa"
-              width={40}
-              height={20}
-              className="h-5 object-contain"
-            />
-            <Image
-              src="/placeholder.svg?height=20&width=40"
-              alt="Mastercard"
-              width={40}
-              height={20}
-              className="h-5 object-contain"
-            />
-            <Image
-              src="/placeholder.svg?height=20&width=40"
-              alt="RuPay"
-              width={40}
-              height={20}
-              className="h-5 object-contain"
-            />
-            <Image
-              src="/placeholder.svg?height=20&width=40"
-              alt="PayPal"
-              width={40}
-              height={20}
-              className="h-5 object-contain"
-            />
-          </div>
-        </div>
-      </section>
     </div>
-  )
+  );
 }

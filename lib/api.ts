@@ -257,7 +257,7 @@ const products = [
     rating: 4.7,
     reviews: 22,
     images: [
-      { src: "https://www.candere.com/media/catalog/product/M/A/MA12345_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Traditional Gold Mangalsutra" }
+      { src: "https://www.candere.com/media/jewellery/images/K000730_1.jpg", alt: "Traditional Gold Mangalsutra" }
     ],
     badges: ["TRENDING"],
     youMayAlsoLike: [
@@ -288,7 +288,7 @@ const products = [
     rating: 4.8,
     reviews: 18,
     images: [
-      { src: "https://www.candere.com/media/catalog/product/M/A/MA54321_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Diamond Mangalsutra Pendant" }
+      { src: "https://www.candere.com/media/jewellery/images/KC06617RG_1.jpg", alt: "Diamond Mangalsutra Pendant" }
     ],
     badges: ["BESTSELLER"],
     youMayAlsoLike: [
@@ -451,8 +451,8 @@ const products = [
     rating: 4.6,
     reviews: 22,
     images: [
-      { src: "https://www.candere.com/media/jewellery/images/NP00123_1.jpeg", alt: "Diamond Nose Pin Front" },
-      { src: "https://www.candere.com/media/jewellery/images/NP00123_2.jpeg", alt: "Diamond Nose Pin Side" }
+      { src: "https://www.candere.com/media/jewellery/images/C007029__1.jpeg", alt: "Diamond Nose Pin Front" },
+      { src: "https://www.candere.com/media/jewellery/images/C007029__6.jpeg", alt: "Diamond Nose Pin Side" }
     ],
     badges: ["POPULAR", "TRENDING"],
     youMayAlsoLike: [

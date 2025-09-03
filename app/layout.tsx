@@ -5,7 +5,7 @@ import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 import ReduxProvider from "@/components/redux-provider"
 import Footer from "./components/Footer"
-import Header from "./components/Header"
+import ConditionalHeader from "@/components/conditional-header"
 
 export const metadata: Metadata = {
   title: "v0 App",
@@ -31,9 +31,9 @@ html {
       </head>
       <body>
         <ReduxProvider>
-          <Header/>
+          <ConditionalHeader />
           {children}
-          <Footer/>
+          <Footer />
         </ReduxProvider>
       </body>
     </html>
