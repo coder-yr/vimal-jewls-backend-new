@@ -454,20 +454,33 @@ export default function ProductDetailClient({ product }: { product: any }) {
       <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 max-w-7xl mx-auto w-full">
         {/* Left Section - Product Images */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Image Gallery with Carousel and Zoom */}
-          <Carousel>
-            {product.images.map((img: { src: string; alt: string }, idx: number) => (
-              <Zoom key={idx}>
-                <Image
-                  src={img.src || "/placeholder.svg"}
-                  alt={img.alt}
+          {/* Image Gallery with Two Images in One Row */}
+          <div className="grid grid-cols-2 gap-4">
+            {product.images.map((item: { src: string; alt?: string; type?: string }, idx: number) => (
+              item.type === "video" ? (
+                <video
+                  key={idx}
+                  controls
+                  className="object-contain rounded-lg w-full"
                   width={500}
                   height={500}
-                  className="object-contain rounded-lg"
-                />
-              </Zoom>
+                >
+                  <source src={item.src} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <Zoom key={idx}>
+                  <Image
+                    src={item.src || "/placeholder.svg"}
+                    alt={item.alt || "Product Image"}
+                    width={500}
+                    height={500}
+                    className="object-contain rounded-lg w-full"
+                  />
+                </Zoom>
+              )
             ))}
-          </Carousel>
+          </div>
         </div>
         {/* Right Section - Product Details Card */}
         <div className="flex-1 flex flex-col gap-6 bg-white rounded-xl shadow-lg p-8">

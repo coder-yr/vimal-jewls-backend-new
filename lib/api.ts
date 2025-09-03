@@ -320,8 +320,11 @@ const products = [
     reviews: 50,
     images: [
       { src: "https://www.candere.com/media/jewellery/images/KC05017YG_1.jpeg", alt: "Classic Solitaire Ring Front" },
-      { src: "https://www.candere.com/media/jewellery/images/KC05017YG_Hand_creative.jpeg", alt: "Classic Solitaire Ring Hand" }, 
+      { src: "https://www.candere.com/media/jewellery/videos/KC05017RG_hand_creative_video.mp4", type: "video", alt: "Classic Solitaire Ring Video" },
       { src: "https://www.candere.com/media/jewellery/images/KC05017RG_Hand_creative.jpeg", alt: "Classic Solitaire Ring Side" },
+      { src: "https://www.candere.com/media/jewellery/images/KC05017YG_2.jpeg", alt: "Classic Solitaire Ring Hand" },
+      { src: "https://www.candere.com/media/jewellery/images/KC05017YG_5.jpeg", alt: "Classic Solitaire Ring Hand" },
+      { src: "https://www.candere.com/media/jewellery/images/KC05017RG_Creative.jpeg", alt: "Classic Solitaire Ring Hand" },
     ],
     badges: ["BESTSELLER"],
     youMayAlsoLike: [],
