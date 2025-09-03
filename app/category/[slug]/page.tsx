@@ -543,10 +543,46 @@ const productCategories = {
   },
 }
 
+const categoryBanners = {
+  earrings: {
+    image: "https://www.candere.com/media/catalog/category/Earrings-Listing-Page-Banner.jpg",
+    alt: "Earrings Banner",
+  },
+  rings: {
+    image: "https://www.candere.com/media/catalog/category/Ring-Listing-Page-Banner.jpg",
+    alt: "Rings Banner",
+  },
+  necklace: {
+    image: "https://www.candere.com/media/catalog/category/Necklace-Listing-Page-Banner.jpg",
+    alt: "Necklace Banner",
+  },
+  "bangles-bracelets": {
+    image: "https://www.candere.com/media/catalog/category/Bracelets-Listing-Page-Banner.jpg",
+    alt: "Bangles & Bracelets Banner",
+  },
+  solitaires: {
+    image: "https://www.candere.com/media/catalog/category/Solitaire-LP_2.jpg",
+    alt: "Solitaires Banner",
+  },
+  "mangalsutras-pendants": {
+    image: "https://www.candere.com/media/catalog/category/LP-Bestseller_1_.jpg",
+    alt: "Mangalsutras & Pendants Banner",
+  },
+  "other-jewellery": {
+    image: "https://www.candere.com/media/catalog/category/Exchange-PLP.jpg",
+    alt: "Other Jewellery Banner",
+  },
+  gifts: {
+    image: "https://www.candere.com/media/catalog/category/Gift-Listing-Page-Banner.jpg",
+    alt: "Gifts Banner",
+  },
+};
+
 export default function CategoryPage() { // Corrected params type
   const params = useParams() // Use useParams to get the slug in client components
   const { slug } = params // Directly access slug, no use() needed for client components
   const categoryData = productCategories[slug as keyof typeof productCategories]
+  const bannerData = categoryBanners[slug as keyof typeof categoryBanners];
 
   if (!categoryData) {
     return <div className="text-center py-10">Category not found.</div>
@@ -554,12 +590,23 @@ export default function CategoryPage() { // Corrected params type
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-gray-900">
+      {/* Dynamic Banner */}
+      {bannerData && (
+        <div className="w-full relative h-64 md:h-80 flex items-center justify-center bg-gradient-to-r from-[#0a2a36] to-[#1a4d5c] mb-6">
+          <img
+            src={bannerData.image}
+            alt={bannerData.alt}
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
+          />
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="bg-gray-100 py-3 px-4 md:px-8 text-sm text-gray-600">
         <Link href="/" className="hover:underline">
           Home
         </Link>{" "}
-        /{" "}
+        /
         <Link href="/category/jewellery" className="hover:underline">
           Jewellery
         </Link>{" "}

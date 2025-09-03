@@ -36,6 +36,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { SectionHeader } from "@/components/section-header";
+import { ProductSummaryCard } from "@/components/product-summary-card";
+import { HelpCard } from "@/components/help-card";
+import { PriceBreakupAccordion } from "@/components/price-breakup-accordion";
 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -326,11 +330,63 @@ const products = [
       },
     ],
   },
+  {
+    id: "chandrak-diamond-stud-earrings",
+    name: "Chandrak Diamond Stud Earrings",
+    inDemand: "10+ Shoppers bought this in the last 30 Days",
+    rating: 4.9,
+    reviews: 45,
+    currentPrice: "25,000",
+    originalPrice: "30,000",
+    youSave: "5,000",
+    badges: ["BESTSELLER", "LIMITED STOCK"],
+    images: [
+      {
+        src: "https://example.com/chandrak-front.jpg",
+        alt: "Chandrak Diamond Stud Earrings Front",
+      },
+      {
+        src: "https://example.com/chandrak-side.jpg",
+        alt: "Chandrak Diamond Stud Earrings Side",
+      },
+    ],
+    description:
+      "The Chandrak Diamond Stud Earrings are a perfect blend of elegance and sophistication. Crafted with precision, these earrings are ideal for any occasion.",
+    productSummary: {
+      styleNo: "CDS12345",
+      width: "0.5 cm",
+      height: "0.5 cm",
+      metalWeight: "2.0g",
+      grossWeight: "2.0g",
+    },
+    metalDetails: "*Weight may vary slightly due to manual craftsmanship.",
+    includedWithPurchase: [
+      { icon: Truck, text: "Free Domestic Shipping" },
+      { icon: Gift, text: "Gift Box" },
+      { icon: Book, text: "Care Tips" },
+      { icon: CheckCircle, text: "Jewellery Certificate" },
+      { icon: Phone, text: "24x7 Customer Support" },
+    ],
+    youMayAlsoLike: [
+      {
+        id: "diamond-stud-earrings",
+        name: "Diamond Stud Earrings",
+        currentPrice: "20,000",
+        originalPrice: "25,000",
+        discount: "20% OFF",
+        rating: 4.8,
+        reviews: 30,
+        image: "https://example.com/diamond-stud.jpg",
+        badge: "TRENDING",
+      },
+    ],
+  },
 ];
 
 export default function ProductDetailClient({ product }: { product: any }) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(product.images[0].src);
+  const [imageSlots, setImageSlots] = useState<(string | null)[]>([null, null, null]);
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
@@ -344,7 +400,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
         metal: "14K Yellow Gold (1.51g)", // Mock metal detail
       })
     );
-    alert("Added to cart!");
+    alert("Item added to cart!");
   };
 
   const handleBuyNow = () => {
@@ -359,6 +415,19 @@ export default function ProductDetailClient({ product }: { product: any }) {
       })
     );
     router.push("/checkout");
+  };
+
+  const handleImageUpload = (newImage: string) => {
+    setImageSlots((prevSlots) => {
+      const updatedSlots = [...prevSlots];
+      const emptyIndex = updatedSlots.findIndex((slot) => slot === null);
+      if (emptyIndex !== -1) {
+        updatedSlots[emptyIndex] = newImage;
+      } else {
+        updatedSlots.push(newImage);
+      }
+      return updatedSlots;
+    });
   };
 
   return (
@@ -378,139 +447,138 @@ export default function ProductDetailClient({ product }: { product: any }) {
         </Link>{" "}
         / <span className="font-semibold">{product.name}</span>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 md:p-8">
+      <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 max-w-7xl mx-auto w-full">
         {/* Left Section - Product Images */}
-        <div className="flex flex-col gap-4">
-          <div className="relative w-full aspect-square border border-gray-200 rounded-lg overflow-hidden">
-            <Image
-              src={selectedImage || "/placeholder.svg"} // Main image
-              alt={product.images[0].alt}
-              fill
-              className="object-contain"
-            />
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {product.images.map((img, index) => (
-              <div
-                key={index}
-                className={`relative w-full aspect-square border  rounded-lg overflow-hidden cursor-pointer hover:border-[#009999] ${
-                  selectedImage === img.src ? "border-2 border-[#FADDA0]" : ""
-                }`}
-                onClick={() => setSelectedImage(img.src)}
-              >
-                <Image
-                  src={img.src || "/placeholder.svg"}
-                  alt={img.alt}
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            *Difference in gold weight may occur & will apply on final price.
-          </p>
-        </div>
-
-        {/* Right Section - Product Details */}
-        <div className="flex flex-col gap-6">
-          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-          <p className="text-sm text-red-500 font-semibold">
-            {product.inDemand}
-          </p>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center text-sm text-gray-600">
-              <Star className="w-4 h-4 fill-yellow-500 text-yellow-500 mr-1" />
-              <span>{product.rating}</span>
-              <span className="ml-1">({product.reviews})</span>
+        <div className="flex-1 flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative w-full aspect-square border border-gray-200 rounded-lg overflow-hidden">
+              <Image
+                src={selectedImage || "/placeholder.svg"} // Main image
+                alt={product.images[0].alt}
+                fill
+                className="object-contain"
+              />
             </div>
+            <div className="flex flex-col gap-2">
+              {product.images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className={`relative w-full aspect-square border rounded-lg overflow-hidden cursor-pointer hover:border-[#009999] ${
+                    selectedImage === img.src ? "border-2 border-[#FADDA0]" : ""
+                  }`}
+                  onClick={() => setSelectedImage(img.src)}
+                >
+                  <Image
+                    src={img.src || "/placeholder.svg"}
+                    alt={img.alt}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Right Section - Product Details Card */}
+        <div className="flex-1 flex flex-col gap-6 bg-white rounded-xl shadow-lg p-8">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              {product.name}
+            </h1>
             <Button
               variant="ghost"
-              className="text-gray-700 hover:text-gray-900"
+              size="icon"
+              className="rounded-full"
             >
-              View Details <ChevronDown className="ml-1 w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
               <Share2 className="w-5 h-5 text-gray-700" />
-              <span className="sr-only">Share</span>
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Heart className="w-5 h-5 text-gray-700" />
-              <span className="sr-only">Add to Wishlist</span>
             </Button>
           </div>
-
-          <div className="flex items-center gap-2">
+          <p className="text-xs text-gray-500 mb-2">
+            310+ views in the last 48 Hours
+          </p>
+          <Button variant="outline" className="mb-2 w-fit">
+            View Details{" "}
+            <ChevronDown className="ml-1 w-4 h-4" />
+          </Button>
+          <div className="flex gap-2 mb-2">
             {product.badges.map((badge) => (
               <span
                 key={badge}
                 className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                  badge === "OUR PICK"
-                    ? "bg-blue-100 text-blue-700 border border-blue-300"
-                    : "bg-green-100 text-green-700 border border-green-300"
+                  badge === "SHIPS IN 24 HRS"
+                    ? "bg-green-100 text-green-700 border border-green-300"
+                    : "bg-blue-100 text-blue-700 border border-blue-300"
                 }`}
               >
                 {badge}
               </span>
             ))}
           </div>
-
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold text-[#009999]">
+          <div className="flex items-end gap-4 mb-2">
+            <span className="text-3xl font-bold text-[#009999]">
               ₹{product.currentPrice}
             </span>
-            <span className="text-xl text-gray-500 line-through">
+            <span className="text-lg text-gray-500 line-through">
               ₹{product.originalPrice}
             </span>
           </div>
-          <p className="text-sm text-green-600 font-medium">
-            YOU SAVE: ₹{product.youSave}
-          </p>
-          <Link href="#" className="text-sm text-[#009999] hover:underline">
-            Notify me When Price Drops
-          </Link>
-
-          <div className="flex gap-4 mt-4">
-            <Button
-              className="bg-[#009999] text-white hover:bg-[#007a7a] px-8 py-3 rounded-md font-semibold"
-              onClick={handleBuyNow}
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">
+              OFFER: 25% OFF ON STONE PRICE
+            </span>
+            <Link
+              href="#"
+              className="text-xs text-[#009999] hover:underline"
             >
-              BUY NOW
-            </Button>
-            <Button
-              variant="outline"
-              className="border-[#009999] text-[#009999] hover:bg-[#e0f2f2] bg-transparent px-8 py-3 rounded-md font-semibold"
-              onClick={handleAddToCart}
-            >
-              ADD TO CART
-            </Button>
+              Notify me When Price Drops
+            </Link>
           </div>
-
-          <div className="bg-gray-100 p-4 rounded-lg flex items-start gap-3">
+          <div className="bg-gray-100 p-4 rounded-lg flex items-start gap-3 mb-2">
             <Truck className="w-6 h-6 text-gray-700 mt-1" />
             <div>
               <p className="font-semibold text-gray-800">
-                Free Shipping by Today
+                Free Shipping by Tomorrow
               </p>
               <p className="text-sm text-gray-600">
-                Order within 09:43:41 to enjoy 24-hours shipping!
+                Order within 20:47:13 to enjoy 24-hours shipping!{" "}
+                <Link
+                  href="#"
+                  className="text-xs text-[#009999] hover:underline"
+                >
+                  T&C Apply
+                </Link>
               </p>
-              <Link href="#" className="text-xs text-[#009999] hover:underline">
-                T&C Apply
-              </Link>
             </div>
           </div>
-
-          <Separator className="my-4" />
-
-          {/* Sizing & Selection */}
-          <h2 className="text-xl font-bold text-gray-900 relative pb-2">
-            Sizing & Selection
-            <span className="absolute bottom-0 left-0 w-1/4 h-0.5 bg-[#009999]"></span>
-          </h2>
-          <div className="flex flex-col gap-4">
+          {/* Sizing & Selection Card */}
+          <div className="bg-white border rounded-xl p-6 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">
+              Sizing & Selection
+            </h2>
+            <div className="mb-4">
+              <label
+                htmlFor="ring-size"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Select Ring Size
+              </label>
+              <Select defaultValue="12">
+                <SelectTrigger className="w-full rounded-md border border-gray-300 bg-white">
+                  <SelectValue placeholder="12 (16.5 mm)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="12">12 (16.5 mm)</SelectItem>
+                  <SelectItem value="13">13 (17.0 mm)</SelectItem>
+                  <SelectItem value="14">14 (17.5 mm)</SelectItem>
+                </SelectContent>
+              </Select>
+              <Link
+                href="#"
+                className="text-xs text-[#009999] hover:underline mt-2 inline-block"
+              >
+                Find your perfect size
+              </Link>
+            </div>
             <div>
               <label
                 htmlFor="customization"
@@ -518,342 +586,103 @@ export default function ProductDetailClient({ product }: { product: any }) {
               >
                 Customization
               </label>
-              <Select defaultValue="14k-yellow-gold">
+              <Select defaultValue="14k-rose-gold">
                 <SelectTrigger className="w-full rounded-md border border-gray-300 bg-white">
-                  <SelectValue placeholder="14k Yellow Gold - In Stock" />
+                  <SelectValue placeholder="14k Rose Gold - In Stock" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="14k-yellow-gold">
-                    14k Yellow Gold - In Stock
+                  <SelectItem value="14k-rose-gold">
+                    14k Rose Gold - In Stock
                   </SelectItem>
                   <SelectItem value="18k-yellow-gold">
                     18k Yellow Gold - In Stock
                   </SelectItem>
-                  <SelectItem value="22k-yellow-gold">
-                    22k Yellow Gold - In Stock
+                  <SelectItem value="22k-white-gold">
+                    22k White Gold - In Stock
                   </SelectItem>
                 </SelectContent>
               </Select>
+              <Link
+                href="#"
+                className="text-xs text-[#009999] hover:underline mt-2 inline-block"
+              >
+                Diamond Guide
+              </Link>
             </div>
           </div>
-
-          {/* Virtual Try On */}
-          <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-gray-800">Virtual Try On</h3>
-              <p className="text-sm text-gray-600">
-                Try your favorite design now from your own device.
-              </p>
-            </div>
-            <Button className="bg-[#009999] text-white px-6 py-2 rounded-md flex items-center gap-2">
-              <Camera className="w-5 h-5" /> Try Now
+          {/* Add to Cart Button (fixed for mobile, inline for desktop) */}
+          <div className="hidden lg:block mt-6">
+            <Button className="w-full bg-[#009999] text-white py-4 text-lg font-semibold rounded-lg">
+              ADD TO CART
             </Button>
           </div>
-
           <Button
-            variant="outline"
-            className="w-full border-[#009999] text-[#009999] hover:bg-[#e0f2f2] bg-transparent"
+            onClick={handleBuyNow}
+            className="mt-4 bg-blue-600 text-white hover:bg-blue-700"
           >
-            <MessageCircle className="w-5 h-5 mr-2" /> CHAT WITH EXPERTS
+            Buy Now
           </Button>
-
-          <Separator className="my-4" />
-
-          {/* Delivery or Instore pickup */}
-          <h2 className="text-xl font-bold text-gray-900 relative pb-2">
-            Delivery or Instore pickup
-            <span className="absolute bottom-0 left-0 w-1/4 h-0.5 bg-[#009999]"></span>
-          </h2>
-          <div className="flex items-center gap-2">
-            <Input
-              type="text"
-              placeholder="302006"
-              className="flex-grow rounded-md border border-gray-300 px-4 py-2"
-            />
-            <Button
-              variant="outline"
-              className="border-gray-300 text-gray-700 px-4 py-2 rounded-md bg-transparent"
-            >
-              Locate Me
-            </Button>
-          </div>
-          <p className="text-sm text-gray-600">Expected Delivery Date</p>
-
-          <Accordion type="multiple" className="w-full">
-            <AccordionItem value="store-1">
-              <AccordionTrigger className="text-base font-semibold text-gray-900 hover:no-underline">
-                Jaipur Tonk Road{" "}
-                <span className="ml-auto text-gray-500">3km</span>
-              </AccordionTrigger>
-              <AccordionContent className="text-gray-700 text-sm leading-relaxed space-y-2">
-                <Link href="#" className="text-[#009999] hover:underline">
-                  Show Store Details
-                </Link>
-                <div className="flex items-center justify-between">
-                  <span>14k Yellow Gold - In Stock</span>
-                  <span className="text-red-500">X (Unavailable)</span>
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-[#009999] text-[#009999] bg-transparent"
-                  >
-                    <Phone className="w-4 h-4 mr-2" /> CALL 9660013363
-                  </Button>
-                  <Button className="flex-1 bg-green-500 text-white hover:bg-green-600">
-                    <MessageCircle className="w-4 h-4 mr-2" /> WHATSAPP
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="store-2">
-              <AccordionTrigger className="text-base font-semibold text-gray-900 hover:no-underline">
-                Jaipur Vaishali Nagar{" "}
-                <span className="ml-auto text-gray-500">4km</span>
-              </AccordionTrigger>
-              <AccordionContent className="text-gray-700 text-sm leading-relaxed space-y-2">
-                <Link href="#" className="text-[#009999] hover:underline">
-                  Show Store Details
-                </Link>
-                <div className="flex items-center justify-between">
-                  <span>14k Yellow Gold - In Stock</span>
-                  <span className="text-red-500">X (Unavailable)</span>
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-[#009999] text-[#009999] bg-transparent"
-                  >
-                    <Phone className="w-4 h-4 mr-2" /> CALL 8233660633
-                  </Button>
-                  <Button className="flex-1 bg-green-500 text-white hover:bg-green-600">
-                    <MessageCircle className="w-4 h-4 mr-2" /> WHATSAPP
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
         </div>
       </div>
-
-      {/* Product Information */}
-      <section className="bg-gray-50 py-8 px-4 md:px-8 mt-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Product Information
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <Image
-                src={product.images[0].src}
-                alt="Product Thumbnail"
-                width={64}
-                height={64}
-                className="object-contain"
-              />
-              <p className="text-lg font-semibold text-gray-800">
-                Statement Gold Hoops For Women!
-              </p>
-            </div>
-            <p className="text-gray-700 leading-relaxed">
-              {product.description}
-            </p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <Accordion type="multiple" className="w-full">
-              <AccordionItem value="product-summary">
-                <AccordionTrigger className="text-lg font-semibold text-gray-900 hover:no-underline">
-                  Product Summary
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-700 text-sm leading-relaxed">
-                  <div className="grid grid-cols-2 gap-2">
-                    <span>Style No.</span>
-                    <span className="font-medium">
-                      {product.productSummary.styleNo}
-                    </span>
-                    <span>Width</span>
-                    <span className="font-medium">
-                      {product.productSummary.width}
-                    </span>
-                    <span>Height</span>
-                    <span className="font-medium">
-                      {product.productSummary.height}
-                    </span>
-                    <span>Metal Weight</span>
-                    <span className="font-medium">
-                      {product.productSummary.metalWeight}
-                    </span>
-                    <span>Gross Weight</span>
-                    <span className="font-medium">
-                      {product.productSummary.grossWeight}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    *Difference in gold weight & will apply on final price.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="metal-details">
-                <AccordionTrigger className="text-lg font-semibold text-gray-900 hover:no-underline">
-                  Metal Details
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-700 text-sm leading-relaxed">
-                  {product.metalDetails}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-            <div className="bg-gray-100 p-4 rounded-lg text-center">
-              <h3 className="font-semibold text-gray-800 mb-2">
-                Need help to find the best jewellery for you ?
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                We are available for your assistance
-              </p>
-              <div className="flex justify-center gap-4">
-                <Button
-                  variant="outline"
-                  className="flex flex-col items-center gap-1 text-gray-700 bg-transparent"
-                >
-                  <Phone className="w-6 h-6" />
-                  <span className="text-xs">Speak with Experts</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex flex-col items-center gap-1 text-gray-700 bg-transparent"
-                >
-                  <MessageCircle className="w-6 h-6" />
-                  <span className="text-xs">Chat with Experts</span>
-                </Button>
+      {/* Fixed Bottom Bar for mobile */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#009999] text-white py-3 px-4 flex items-center justify-between shadow-lg z-20">
+        <span className="font-semibold">Offer Price: ₹{product.currentPrice}</span>
+        <Button className="bg-white text-[#009999] hover:bg-gray-100 px-6 py-2 rounded-md font-semibold">
+          ADD TO CART
+        </Button>
+      </div>
+      {/* Product Information Section */}
+      <main className="container mx-auto px-4 py-10">
+        <SectionHeader title="Product Information" underlineClassName="bg-teal-500" />
+        <div className="mt-10 grid gap-8 md:grid-cols-[320px,1fr]">
+          {/* Left: Image, heading, description */}
+          <div className="space-y-6">
+            <div className="flex items-start gap-6">
+              <Image src={product.images[0]?.src || "/placeholder.svg"} alt={product.images[0]?.alt || product.name} width={80} height={80} className="rounded-lg object-contain" />
+              <div>
+                <h3 className="font-semibold text-lg mb-2">✨Fashionable Glamour, Sparkling Elegance!</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  {product.description || "No description available."}
+                </p>
               </div>
             </div>
+            <ProductSummaryCard
+              data={Object.entries(product.productSummary || {}).reduce((acc: Record<string, string>, [key, value]) => {
+                acc[key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())] = value ? String(value) : "N/A";
+                return acc;
+              }, {})}
+              note={<p className="text-xs text-gray-500">*Difference in gold weight may occur & will apply on final price.</p>}
+            />
+            <HelpCard />
+          </div>
+          {/* Right: Price Breakup and details */}
+          <div>
+            <PriceBreakupAccordion
+              rows={product.priceBreakup || []}
+              grandTotal={product.grandTotal || "N/A"}
+              grandCaption="(MRP Incl. of all taxes)"
+            />
+            <p className="mt-6 text-sm text-muted-foreground">
+              *A differential amount will be applicable with difference in weight if any.
+            </p>
           </div>
         </div>
-      </section>
-
-      {/* You may also like */}
-      <section className="bg-white py-16 px-4 md:px-8 text-center">
-        <h2 className="text-4xl font-bold mb-2">You may also like</h2>
-        <p className="text-gray-600 mb-12">Discover More Favourites</p>
-        <div className="relative max-w-7xl mx-auto">
-          <div className="flex overflow-x-auto scrollbar-hide gap-6 pb-4">
-            {product.youMayAlsoLike.map((item) => (
-              <Link
-                href={`/product/${item.id}`}
-                key={item.id}
-                className="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden relative group"
-              >
-                {item.badge && (
-                  <div
-                    className={`absolute top-0 left-0 px-3 py-1 text-xs font-semibold text-white rounded-br-lg ${
-                      (item.badge === "TRENDING" && "bg-pink-500") ||
-                      (item.badge === "BESTSELLER" && "bg-purple-500") ||
-                      (item.badge === "LIMITED DEAL" && "bg-orange-500") ||
-                      "bg-indigo-500"
-                    }`}
-                  >
-                    {item.badge === "TRENDING" && (
-                      <TrendingUp className="inline-block w-3 h-3 mr-1" />
-                    )}
-                    {item.badge === "BESTSELLER" && (
-                      <Crown className="inline-block w-3 h-3 mr-1" />
-                    )}
-                    {item.badge === "LIMITED DEAL" && (
-                      <Clock className="inline-block w-3 h-3 mr-1" />
-                    )}
-                    {item.badge}
-                  </div>
-                )}
-                <Image
-                  src={`${item.image}`}
-                  alt={item.name}
-                  width={256}
-                  height={256}
-                  className="object-contain w-full h-64 p-4"
-                />
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-lg font-bold text-[#009999]">
-                      ₹{item.currentPrice}
-                    </div>
-                    <div className="text-sm text-gray-500 line-through">
-                      ₹{item.originalPrice}
-                    </div>
-                  </div>
-                  <p className="text-sm text-green-600 font-medium mb-2">
-                    {item.discount}
-                  </p>
-                  <h3 className="text-base font-medium text-gray-800 mb-2">
-                    {item.name}
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Star className="w-4 h-4 fill-yellow-500 text-yellow-500 mr-1" />
-                    <span>{item.rating}</span>
-                    <span className="ml-1">({item.reviews})</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white shadow-md"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white shadow-md"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* What's included with the Purchase? */}
-      <section className="bg-[#e0f2f2] py-12 px-4 md:px-8 text-center">
-        <h2 className="text-3xl font-bold mb-8">
-          What&apos;s included with the Purchase ?
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-7xl mx-auto">
-          {product.includedWithPurchase.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center text-gray-800"
-            >
-              <item.icon className="w-10 h-10 mb-3 text-[#009999]" />
-              <span className="text-sm font-medium">{item.text}</span>
+      </main>
+      {/* You May Also Like Section */}
+      <div className="you-may-also-like-section grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {product.youMayAlsoLike.map((item: { id: string; name: string; image: string }) => (
+          <div key={item.id} className="flex flex-col items-center">
+            <div className="relative w-40 h-40 rounded-lg shadow-md overflow-hidden">
+              <Image
+                src={item.image || '/placeholder.svg'}
+                alt={item.name}
+                fill
+                className="object-cover"
+              />
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Fixed Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#009999] text-white py-3 px-4 md:px-8 flex items-center justify-between shadow-lg z-20">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/placeholder.svg?height=40&width=40"
-            alt="Product Thumbnail"
-            width={40}
-            height={40}
-            className="object-contain rounded-md"
-          />
-          <span className="font-semibold">{product.name}</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-lg font-bold">
-            Offer Price: ₹{product.currentPrice}
-          </span>
-          <Button
-            className="bg-white text-[#009999] hover:bg-gray-100 px-6 py-2 rounded-md font-semibold"
-            onClick={handleAddToCart}
-          >
-            ADD TO CART
-          </Button>
-        </div>
+            <p className="text-center text-sm font-medium mt-2">{item.name}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

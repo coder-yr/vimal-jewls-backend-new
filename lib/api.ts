@@ -17,10 +17,10 @@ const products = [
     badges: ["OUR PICK"],
     youMayAlsoLike: [],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" },
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" },
     ],
     productSummary: {
       styleNo: "GE01005",
@@ -79,10 +79,10 @@ const products = [
       { id: "diamond-heart-pendant", name: "Diamond Heart Pendant" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "RNG002",
@@ -110,10 +110,10 @@ const products = [
       { id: "diamond-heart-pendant", name: "Diamond Heart Pendant" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "CHN001",
@@ -141,10 +141,10 @@ const products = [
       { id: "floral-gold-ring", name: "Floral Gold Ring" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "BR001",
@@ -172,10 +172,10 @@ const products = [
       { id: "floral-gold-ring", name: "Floral Gold Ring" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "KADA001",
@@ -203,10 +203,10 @@ const products = [
       { id: "classic-solitaire-ring", name: "Classic Solitaire Ring" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "RNG003",
@@ -234,10 +234,10 @@ const products = [
       { id: "diamond-heart-pendant", name: "Diamond Heart Pendant" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "PEND5678",
@@ -265,10 +265,10 @@ const products = [
       { id: "floral-gold-ring", name: "Floral Gold Ring" }
     ],
     includedWithPurchase: [
-      { icon: "Gift", text: "Gift Box" },
-      { icon: "Book", text: "Care Tips" },
-      { icon: "CheckCircle", text: "Jewellery Certificate" },
-      { icon: "Phone", text: "24x7 Customer Support" }
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
     ],
     productSummary: {
       styleNo: "MANG001",
@@ -320,6 +320,7 @@ const products = [
     reviews: 50,
     images: [
       { src: "https://www.candere.com/media/jewellery/images/KC05017YG_1.jpeg", alt: "Classic Solitaire Ring Front" },
+      { src: "https://www.candere.com/media/jewellery/images/KC05017YG_Hand_creative.jpeg", alt: "Classic Solitaire Ring Hand" }, 
       { src: "https://www.candere.com/media/jewellery/images/KC05017RG_Hand_creative.jpeg", alt: "Classic Solitaire Ring Side" },
     ],
     badges: ["BESTSELLER"],
@@ -440,6 +441,70 @@ const products = [
     includedWithPurchase: [],
     productSummary: {},
     metalDetails: "",
+  },
+  {
+    id: "diamond-nose-pin",
+    name: "Diamond Nose Pin",
+    description: "A delicate nose pin featuring a sparkling diamond, perfect for everyday elegance and special occasions.",
+    currentPrice: "8,500",
+    originalPrice: "10,000",
+    rating: 4.6,
+    reviews: 22,
+    images: [
+      { src: "https://www.candere.com/media/jewellery/images/NP00123_1.jpeg", alt: "Diamond Nose Pin Front" },
+      { src: "https://www.candere.com/media/jewellery/images/NP00123_2.jpeg", alt: "Diamond Nose Pin Side" }
+    ],
+    badges: ["POPULAR", "TRENDING"],
+    youMayAlsoLike: [
+      { id: "elenai-gold-hoop-earrings", name: "Elenai Gold Hoop Earrings" },
+      { id: "diamond-heart-pendant", name: "Diamond Heart Pendant" }
+    ],
+    includedWithPurchase: [
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
+    ],
+    productSummary: {
+      styleNo: "NP00123",
+      width: "0.2 cm",
+      height: "0.2 cm",
+      metalWeight: "0.5g",
+      grossWeight: "0.5g",
+    },
+    metalDetails: "*Actual weight may vary slightly due to manual craftsmanship.",
+  },
+  {
+    id: "gold-toe-ring",
+    name: "Gold Toe Ring",
+    description: "Traditional gold toe ring crafted for comfort and style, perfect for daily wear or festive occasions.",
+    currentPrice: "3,200",
+    originalPrice: "4,000",
+    rating: 4.5,
+    reviews: 18,
+    images: [
+      { src: "https://www.candere.com/media/jewellery/images/TR00111_1.jpeg", alt: "Gold Toe Ring Front" },
+      { src: "https://www.candere.com/media/jewellery/images/TR00111_2.jpeg", alt: "Gold Toe Ring Side" }
+    ],
+    badges: ["TRADITIONAL", "BESTSELLER"],
+    youMayAlsoLike: [
+      { id: "diamond-nose-pin", name: "Diamond Nose Pin" },
+      { id: "elenai-gold-hoop-earrings", name: "Elenai Gold Hoop Earrings" }
+    ],
+    includedWithPurchase: [
+      { icon: "gift", text: "Gift Box" },
+      { icon: "book", text: "Care Tips" },
+      { icon: "check-circle", text: "Jewellery Certificate" },
+      { icon: "phone", text: "24x7 Customer Support" }
+    ],
+    productSummary: {
+      styleNo: "TR00111",
+      width: "0.3 cm",
+      height: "0.3 cm",
+      metalWeight: "1.0g",
+      grossWeight: "1.0g",
+    },
+    metalDetails: "*Weight may vary slightly due to manual craftsmanship.",
   },
 ];
 
