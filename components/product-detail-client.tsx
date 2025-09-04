@@ -454,9 +454,8 @@ export default function ProductDetailClient({ product }: { product: any }) {
       <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 max-w-7xl mx-auto w-full">
         {/* Left Section - Product Images */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Image Gallery with Two Images in One Row */}
           <div className="grid grid-cols-2 gap-4">
-            {product.images.map((item: { src: string; alt?: string; type?: string }, idx: number) => (
+            {product.images.map((item, idx) => (
               item.type === "video" ? (
                 <video
                   key={idx}
@@ -504,7 +503,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
             <ChevronDown className="ml-1 w-4 h-4" />
           </Button>
           <div className="flex gap-2 mb-2">
-            {product.badges.map((badge: string) => (
+            {product.badges.map((badge) => (
               <span
                 key={badge}
                 className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -613,7 +612,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
               </Link>
             </div>
           </div>
-          {/* Add to Cart Button (fixed for mobile, inline for desktop) */}
           <div className="hidden lg:block mt-6">
             <Button className="w-full bg-[#009999] text-white py-4 text-lg font-semibold rounded-lg">
               ADD TO CART
@@ -627,18 +625,15 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </Button>
         </div>
       </div>
-      {/* Fixed Bottom Bar for mobile */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#009999] text-white py-3 px-4 flex items-center justify-between shadow-lg z-20">
         <span className="font-semibold">Offer Price: ₹{product.currentPrice}</span>
         <Button className="bg-white text-[#009999] hover:bg-gray-100 px-6 py-2 rounded-md font-semibold">
           ADD TO CART
         </Button>
       </div>
-      {/* Product Information Section */}
       <main className="container mx-auto px-4 py-10">
         <SectionHeader title="Product Information" underlineClassName="bg-teal-500" />
         <div className="mt-10 grid gap-8 md:grid-cols-[320px,1fr]">
-          {/* Left: Image, heading, description */}
           <div className="space-y-6">
             <div className="flex items-start gap-6">
               <Image src={product.images[0]?.src || "/placeholder.svg"} alt={product.images[0]?.alt || product.name} width={80} height={80} className="rounded-lg object-contain" />
@@ -651,7 +646,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
             </div>
             <ProductSummaryCard
               data={Object.entries(product.productSummary || {}).reduce(
-                (acc: Record<string, string>, [key, value]) => {
+                (acc, [key, value]) => {
                   acc[key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())] =
                     value ? String(value) : "N/A";
                   return acc;
@@ -662,7 +657,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
             />
             <HelpCard />
           </div>
-          {/* Right: Price Breakup and details */}
           <div>
             <PriceBreakupAccordion
               rows={product.priceBreakup || []}
@@ -675,9 +669,8 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </div>
         </div>
       </main>
-      {/* You May Also Like Section */}
       <div className="you-may-also-like-section grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {product.youMayAlsoLike.map((item: { id: string; name: string; image: string }) => (
+        {product.youMayAlsoLike.map((item) => (
           <div key={item.id} className="flex flex-col items-center">
             <div className="relative w-40 h-40 rounded-lg shadow-md overflow-hidden">
               <Image
@@ -691,7 +684,6 @@ export default function ProductDetailClient({ product }: { product: any }) {
           </div>
         ))}
       </div>
-      {/* Tabbed Layout for Specifications */}
       <Tabs defaultValue="description" className="mt-8">
         <TabsList className="flex justify-center bg-gray-100 p-2 rounded-lg shadow-md">
           <TabsTrigger value="description" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
@@ -729,7 +721,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
           <div>
             <h3 className="text-lg font-semibold mb-4">Customer Reviews</h3>
             {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review: { comment: string; author: string; rating: number }, idx: number) => (
+              product.reviews.map((review, idx) => (
                 <div key={idx} className="border-b py-4">
                   <div className="flex items-center gap-2 mb-2">
                     {[...Array(5)].map((_, starIdx) => (

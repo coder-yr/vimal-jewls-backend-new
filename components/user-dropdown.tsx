@@ -14,21 +14,21 @@ export function UserDropdown() {
           <span className="sr-only">Account</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
         <DropdownMenuItem asChild>
-          <Link href="/profile">My Profile</Link>
+          <Link href="/profile" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/orders">My Orders</Link>
+          <Link href="/orders" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Orders</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/orders/track">Track Order</Link>
+          <Link href="/orders/track" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Track Order</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/orders/returns">Returns</Link>
+          <Link href="/orders/returns" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Returns</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          Logout
+          <button className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Logout</button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

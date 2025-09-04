@@ -113,7 +113,7 @@ export default function OrderTrackingPage() {
             {/* Order Items Card */}
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-bold mb-4">Order Items</h2>
-              <div className="bg-[#fcfaf6] rounded-lg flex items-center justify-between p-4">
+              <div className="bg-[#fcfaf6] rounded-lg flex flex-col sm:flex-row items-center justify-between p-4">
                 <div className="flex items-center gap-4">
                   <img src={trackingInfo.product.image || "/placeholder.svg"} alt={trackingInfo.product.name} width={64} height={64} className="object-contain rounded-md" />
                   <div>
@@ -129,20 +129,15 @@ export default function OrderTrackingPage() {
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-bold mb-4">Order Timeline</h2>
               <div className="flex flex-col gap-4">
-                {/* Timeline steps - static for demo, you can make dynamic */}
-                {[
-                  { label: "Order Placed", date: "Dec 20, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
-                  { label: "Order Confirmed", date: "Dec 21, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
-                  { label: "In Production", date: "Dec 22, 2024", completed: true, icon: <Package className="w-6 h-6 text-yellow-500" /> },
-                  { label: "Quality Check", date: "Dec 24, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
-                  { label: "Shipped", date: "Dec 25, 2024", completed: true, icon: <Truck className="w-6 h-6 text-yellow-500" /> },
-                  { label: "Out for Delivery", date: "Dec 28, 2024", completed: false, icon: <Clock className="w-6 h-6 text-gray-400" /> },
-                  { label: "Delivered", date: "Expected Dec 28, 2024", completed: false, icon: <CheckCircle className="w-6 h-6 text-gray-300" /> },
-                ].map((step, idx) => (
-                  <div key={idx} className="flex items-center gap-4">
-                    <div>{step.icon}</div>
-                    <div className={`font-semibold text-lg ${step.completed ? "text-gray-900" : "text-gray-500"}`}>{step.label}</div>
-                    <div className="ml-auto text-gray-500 text-sm">{step.date}</div>
+                {trackingInfo.history.map((event: any, idx: number) => (
+                  <div key={idx} className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="text-gray-500 text-sm">{event.date} {event.time}</div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-lg">{event.description}</div>
+                    </div>
+                    <div>
+                      {getStatusIcon(trackingInfo.status)}
+                    </div>
                   </div>
                 ))}
               </div>

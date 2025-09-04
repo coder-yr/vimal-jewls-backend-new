@@ -49,14 +49,15 @@ export default function Component() {
         {/* Top Header */}
 
         {/* Hero Section */}
-        <section className="relative w-full h-[600px] bg-gradient-to-r from-[#006666] to-[#009999] flex items-center justify-center overflow-hidden">
+        <section className="relative w-full h-[600px] sm:h-[500px] md:h-[400px] lg:h-[600px] bg-gradient-to-r from-[#006666] to-[#009999] flex items-center justify-center overflow-hidden">
           <Image
             src="https://www.candere.com/media/home_page_images/slider/Banner_170725.jpg"
             alt="Shah Rukh Khan with jewelry"
             fill
-            className="object-cover object-[center_top] md:object-[center_top] lg:object-[center_top] xl:object-[center_top] 2xl:object-[center_top] rounded-b-3xl shadow-2xl"
+            className="object-cover object-center md:object-[center_top] lg:object-[center_top] xl:object-[center_top] 2xl:object-[center_top] rounded-b-3xl shadow-2xl"
             style={{ objectPosition: "center -100px" }} // Adjust object position to show SRK
             priority
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
         </section>
 
@@ -120,7 +121,7 @@ export default function Component() {
         <section className="bg-white py-16 px-4 md:px-8 text-center">
           <h2 className="text-5xl font-extrabold mb-2 text-gray-900 tracking-tight">Shop By Category</h2>
           <p className="text-xl text-gray-500 mb-10 font-light">So that you don't run out of options to choose from!</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 max-w-5xl mx-auto">
             {[
               {
                 name: "Charming Rings",
@@ -180,7 +181,7 @@ export default function Component() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6 max-w-2xl mx-auto">
             Jewellery that speaks strength. Discover bold designs for modern men
           </h2>
-          <Button className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold border border-gray-900">
+          <Button className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold">
             EXPLORE
           </Button>
         </section>

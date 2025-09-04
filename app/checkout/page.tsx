@@ -42,7 +42,7 @@ export default function CheckoutPage() {
             cartItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0"
+                className="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-200 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0"
               >
                 <Image
                   src={item.image}
@@ -51,13 +51,13 @@ export default function CheckoutPage() {
                   height={100}
                   className="object-contain rounded-md"
                 />
-                <div className="flex-1">
+                <div className="flex-1 text-center sm:text-left">
                   <h3 className="font-semibold text-lg">{item.name}</h3>
                   <p className="text-sm text-gray-600">Metal: {item.metal}</p>
                   <p className="text-sm text-gray-600">Size: {item.size}</p>
                   <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                 </div>
-                <div className="flex flex-col items-end">
+                <div className="flex flex-col items-center sm:items-end">
                   <button onClick={() => handleRemoveItem(item.id)} className="text-gray-400 hover:text-gray-700 mb-2">
                     <X className="w-4 h-4" />
                   </button>
@@ -87,7 +87,7 @@ export default function CheckoutPage() {
                 CHECK OFFERS
               </Button>
             </div>
-            <div className="flex items-center justify-between bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-md">
+            <div className="flex flex-col sm:flex-row items-center justify-between bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-md">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" />
                 <span>Coupon MONSOON Applied Successfully</span>

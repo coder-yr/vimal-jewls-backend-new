@@ -34,9 +34,9 @@ export default function ProfilePage() {
   ]
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-4">
+      <aside className="w-full lg:w-64 bg-white shadow-md p-4">
         <div className="text-center mb-6">
           <img
             src="/placeholder-user.jpg"
@@ -64,7 +64,7 @@ export default function ProfilePage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8">
         <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -89,7 +89,7 @@ export default function ProfilePage() {
             <Label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
               Mobile No.
             </Label>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input id="phone" type="tel" defaultValue={user.phone} className="flex-1" />
               <Button className="bg-[#009999] text-white hover:bg-[#007a7a] py-2 rounded-md font-semibold">
                 VERIFY
@@ -136,7 +136,7 @@ export default function ProfilePage() {
 
         <div className="mt-6">
           <h2 className="text-lg font-semibold mb-4">Occasions</h2>
-          <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-between">
+          <div className="bg-gray-100 rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between">
             <img
               src="/placeholder.jpg"
               alt="Occasion"
