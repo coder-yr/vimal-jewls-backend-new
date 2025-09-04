@@ -81,19 +81,12 @@ export default function OrderTrackingPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
-      <div className="bg-[#009999] text-white py-3 text-center text-lg font-semibold">
-        Track Your Order
-      </div>
-      
-
+    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+      <div className="bg-[#009999] text-white py-3 text-center text-lg font-semibold">Track Your Order</div>
       <div className="flex-1 p-4 md:p-8 max-w-2xl mx-auto w-full">
-        {/* <h2 className="text-2xl font-bold mb-6 text-center">Track Your Order</h2> */}
         <div className="space-y-4 mb-8">
           <div>
-            <Label htmlFor="orderId" className="block text-sm font-medium text-gray-700 mb-1">
-              Enter Order ID
-            </Label>
+            <Label htmlFor="orderId" className="block text-sm font-medium text-gray-700 mb-1">Enter Order ID</Label>
             <Input
               id="orderId"
               type="text"
@@ -106,9 +99,7 @@ export default function OrderTrackingPage() {
           <Button
             className="w-full bg-[#009999] text-white hover:bg-[#007a7a] py-3 rounded-md font-semibold"
             onClick={handleTrackOrder}
-          >
-            TRACK ORDER
-          </Button>
+          >TRACK ORDER</Button>
         </div>
 
         {error && (
@@ -118,42 +109,45 @@ export default function OrderTrackingPage() {
         )}
 
         {trackingInfo && (
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold flex items-center gap-2">
-                {getStatusIcon(trackingInfo.status)}
-                Order Status: {trackingInfo.status}
-              </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">Estimated Delivery: {trackingInfo.estimatedDelivery}</p>
-            </CardHeader>
-            <CardContent>
-              {trackingInfo.product && (
-                <div className="flex items-center gap-4 mb-4">
-                  <img src={trackingInfo.product.image || "/placeholder.svg"} alt={trackingInfo.product.name} width={80} height={80} className="object-contain rounded-md" />
+          <div className="space-y-8">
+            {/* Order Items Card */}
+            <div className="bg-white rounded-xl shadow p-6">
+              <h2 className="text-xl font-bold mb-4">Order Items</h2>
+              <div className="bg-[#fcfaf6] rounded-lg flex items-center justify-between p-4">
+                <div className="flex items-center gap-4">
+                  <img src={trackingInfo.product.image || "/placeholder.svg"} alt={trackingInfo.product.name} width={64} height={64} className="object-contain rounded-md" />
                   <div>
-                    <p className="font-medium text-lg">{trackingInfo.product.name}</p>
+                    <div className="font-semibold text-lg">{trackingInfo.product.name}</div>
+                    <div className="text-sm text-gray-500">SKU: CDR-001</div>
                   </div>
                 </div>
-              )}
-              <h3 className="text-lg font-semibold mb-3">Tracking History:</h3>
-              <div className="space-y-3">
-                {trackingInfo.history.map((event: any, index: number) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="w-3 h-3 rounded-full bg-[#009999] mt-1" />
-                      {index < trackingInfo.history.length - 1 && (
-                        <div className="w-0.5 h-8 bg-gray-300" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">{event.description}</p>
-                      <p className="text-xs text-gray-500">{event.date} at {event.time}</p>
-                    </div>
+                <div className="text-xl font-semibold text-yellow-600">₹1,25,000</div>
+              </div>
+            </div>
+
+            {/* Order Timeline Card */}
+            <div className="bg-white rounded-xl shadow p-6">
+              <h2 className="text-xl font-bold mb-4">Order Timeline</h2>
+              <div className="flex flex-col gap-4">
+                {/* Timeline steps - static for demo, you can make dynamic */}
+                {[
+                  { label: "Order Placed", date: "Dec 20, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
+                  { label: "Order Confirmed", date: "Dec 21, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
+                  { label: "In Production", date: "Dec 22, 2024", completed: true, icon: <Package className="w-6 h-6 text-yellow-500" /> },
+                  { label: "Quality Check", date: "Dec 24, 2024", completed: true, icon: <CheckCircle className="w-6 h-6 text-yellow-500" /> },
+                  { label: "Shipped", date: "Dec 25, 2024", completed: true, icon: <Truck className="w-6 h-6 text-yellow-500" /> },
+                  { label: "Out for Delivery", date: "Dec 28, 2024", completed: false, icon: <Clock className="w-6 h-6 text-gray-400" /> },
+                  { label: "Delivered", date: "Expected Dec 28, 2024", completed: false, icon: <CheckCircle className="w-6 h-6 text-gray-300" /> },
+                ].map((step, idx) => (
+                  <div key={idx} className="flex items-center gap-4">
+                    <div>{step.icon}</div>
+                    <div className={`font-semibold text-lg ${step.completed ? "text-gray-900" : "text-gray-500"}`}>{step.label}</div>
+                    <div className="ml-auto text-gray-500 text-sm">{step.date}</div>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>

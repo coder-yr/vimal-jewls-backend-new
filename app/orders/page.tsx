@@ -3,11 +3,9 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckoutProgress } from "@/components/checkout-progress" // Reusing for consistent header
 import { Package, Truck, CheckCircle, XCircle } from 'lucide-react'
 
 export default function MyOrdersPage() {
-  // Dummy order data
   const orders = [
     {
       id: "ORD123456789",
@@ -15,7 +13,7 @@ export default function MyOrdersPage() {
       total: "₹33,626",
       status: "Delivered",
       items: [
-        { name: "Chandrak Diamond Stud Earrings", quantity: 1, image: "https://www.candere.com/media/jewellery/images/KC06683YG_2.jpeg?height=100&width=100" },
+        { name: "Chandrak Diamond Stud Earrings", quantity: 1, image: "https://www.candere.com/media/jewellery/images/KC06683YG_2.jpeg" },
       ],
     },
     {
@@ -24,7 +22,7 @@ export default function MyOrdersPage() {
       total: "₹20,396",
       status: "Shipped",
       items: [
-        { name: "Scallop Gold Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360?height=100&width=100" },
+        { name: "Scallop Gold Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg" },
       ],
     },
     {
@@ -33,7 +31,7 @@ export default function MyOrdersPage() {
       total: "₹21,934",
       status: "Processing",
       items: [
-        { name: "Feather Scape Peacock Gold And Gemstone Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/K/C/KC04453YG_1_5.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360?height=100&width=100" },
+        { name: "Feather Scape Peacock Gold And Gemstone Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/K/C/KC04453YG_1_5.jpeg" },
       ],
     },
   ]
@@ -53,55 +51,72 @@ export default function MyOrdersPage() {
     }
   }
 
-  return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
-      <div className="bg-[#009999] text-white py-3 text-center text-lg font-semibold">
-        My Orders
-      </div>
-      
 
-      <div className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
-        {/* <h2 className="text-2xl font-bold mb-6 text-center">My Orders</h2> */}
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <main className="flex-1 px-4 md:px-0 max-w-3xl mx-auto w-full py-10">
+        <h1 className="text-4xl font-bold text-center mb-2">MY ORDERS</h1>
+        <p className="text-center text-gray-600 mb-8">View and manage all your precious jewelry orders from Candere</p>
+
+        {/* Order Lookup */}
+        <section className="bg-white rounded-xl shadow p-6 mb-10">
+          <h2 className="text-lg font-semibold mb-2">ORDER LOOKUP</h2>
+          <p className="text-gray-600 mb-4">Enter your order number to view detailed tracking information</p>
+          <form className="flex gap-2 max-w-md">
+            <input type="text" placeholder="Enter order number (e.g., KJ2024001)" className="flex-1 border rounded px-3 py-2" />
+            <Button type="submit" className="bg-[#6bbba1] text-white px-6">TRACK</Button>
+          </form>
+        </section>
+
+        {/* Recent Orders */}
+        <h2 className="text-2xl font-semibold mb-4">YOUR RECENT ORDERS</h2>
         {orders.length === 0 ? (
           <div className="text-center text-gray-600 py-10">You have no past orders.</div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {orders.map((order) => (
-              <Card key={order.id} className="shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-lg font-semibold">Order #{order.id}</CardTitle>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    {getStatusIcon(order.status)}
-                    <span>{order.status}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">Order Date: {order.date}</p>
-                  <div className="space-y-3 mb-4">
-                    {order.items.map((item, index) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <img src={item.image || "/placeholder.svg"} alt={item.name} width={60} height={60} className="object-contain rounded-md" />
-                        <div>
-                          <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                        </div>
+              <div key={order.id} className="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row justify-between gap-6">
+                <div className="flex-1">
+                  <div className="mb-2 text-lg font-semibold">ORDER #{order.id}</div>
+                  <div className="text-gray-500 text-sm mb-4">Placed on {new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+                  <div className="mb-2 font-semibold">ITEMS ({order.items.length})</div>
+                  <div className="flex gap-4 flex-wrap">
+                    {order.items.map((item, idx) => (
+                      <div key={idx} className="bg-gray-50 rounded-lg p-2 flex flex-col items-center w-40">
+                        <img src={item.image} alt={item.name} className="w-20 h-20 object-contain mb-2 rounded" />
+                        <div className="text-sm font-medium text-gray-800 text-center">{item.name}</div>
+                        <div className="text-xs text-gray-500">Qty: {item.quantity}</div>
+                        {/* Example SKU and price, you can add real data */}
+                        <div className="text-xs text-gray-500">SKU: DSR-001</div>
+                        <div className="text-sm text-green-700 font-semibold mt-1">₹85,000</div>
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                    <span className="text-lg font-bold">Total: {order.total}</span>
+                </div>
+                <div className="flex flex-col gap-4 min-w-[200px] items-end justify-between">
+                  <div className="flex gap-2 items-center">
+                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">DELIVERED</span>
                     <Link href={`/orders/track?orderId=${order.id}`}>
-                      <Button variant="outline" className="border-[#009999] text-[#009999] hover:bg-[#e0f2f2]">
-                        Track Order
-                      </Button>
+                      <Button variant="outline" className="border-[#009999] text-[#009999] px-3 py-1 text-xs hover:bg-[#e0f2f2]">Track Order</Button>
                     </Link>
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <div className="text-xs text-gray-500 mb-1">TOTAL AMOUNT</div>
+                    <div className="text-2xl font-bold text-green-700">{order.total}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500 mb-1">DELIVERED ON</div>
+                    <div className="text-sm font-semibold">22 Jan 2024</div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         )}
-      </div>
+      </main>
+      <footer className="bg-gray-100 text-center py-4 text-sm text-gray-600 mt-auto">
+        © 2025 Vimal Jewels. All rights reserved.
+      </footer>
     </div>
   )
 }
