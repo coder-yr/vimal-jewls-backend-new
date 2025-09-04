@@ -195,7 +195,7 @@ const products = [
     rating: 4.9,
     reviews: 60,
     images: [
-      { src: "https://www.candere.com/media/catalog/product/R/I/RI12345_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Round Solitaire Diamond Ring" }
+      { src: "https://www.candere.com/media/jewellery/images/C003558__1.jpg", alt: "Round Solitaire Diamond Ring" }
     ],
     badges: ["BESTSELLER"],
     youMayAlsoLike: [
@@ -226,7 +226,7 @@ const products = [
     rating: 4.8,
     reviews: 40,
     images: [
-      { src: "https://www.candere.com/media/catalog/product/P/E/PE12345_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Princess Cut Solitaire Pendant" }
+      { src: "https://www.candere.com/media/jewellery/images/C022020_1.jpeg", alt: "Princess Cut Solitaire Pendant" }
     ],
     badges: ["LIMITED DEAL"],
     youMayAlsoLike: [
@@ -486,8 +486,8 @@ const products = [
     rating: 4.5,
     reviews: 18,
     images: [
-      { src: "https://www.candere.com/media/jewellery/images/TR00111_1.jpeg", alt: "Gold Toe Ring Front" },
-      { src: "https://www.candere.com/media/jewellery/images/TR00111_2.jpeg", alt: "Gold Toe Ring Side" }
+      { src: "https://www.candere.com/media/jewellery/images/LCR0579_1.jpeg", alt: "Gold Toe Ring Front" },
+      { src: "https://www.candere.com/media/jewellery/images/LCR0581_Creative.jpeg", alt: "Gold Toe Ring Side" }
     ],
     badges: ["TRADITIONAL", "BESTSELLER"],
     youMayAlsoLike: [

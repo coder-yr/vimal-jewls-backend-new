@@ -389,6 +389,7 @@ const productCategories = {
         reviews: 60,
         imageQuery: "round solitaire diamond ring",
         badge: "BESTSELLER",
+        image: "https://www.candere.com/media/jewellery/images/KC05017YG_1.jpeg"
       },
       {
         id: "princess-cut-solitaire-pendant",
@@ -400,6 +401,7 @@ const productCategories = {
         reviews: 40,
         imageQuery: "princess cut solitaire pendant",
         badge: "LIMITED DEAL",
+        image:"https://www.candere.com/media/jewellery/images/C022020_1.jpeg"
       },
     ],
   },
@@ -428,6 +430,7 @@ const productCategories = {
         reviews: 22,
         imageQuery: "traditional gold mangalsutra",
         badge: "TRENDING",
+        image :"https://www.candere.com/media/jewellery/images/K000730_1.jpg"
       },
       {
         id: "diamond-mangalsutra-pendant",
@@ -439,6 +442,7 @@ const productCategories = {
         reviews: 18,
         imageQuery: "diamond mangalsutra pendant",
         badge: "BESTSELLER",
+        image:"https://www.candere.com/media/jewellery/images/KC06617RG_1.jpg"
       },
     ],
   },
@@ -467,6 +471,7 @@ const productCategories = {
         reviews: 12,
         imageQuery: "diamond nose pin",
         badge: "BESTSELLER",
+        image:"https://www.candere.com/media/jewellery/images/C007029__1.jpeg"
       },
       {
         id: "gold-toe-ring",
@@ -478,6 +483,7 @@ const productCategories = {
         reviews: 8,
         imageQuery: "gold toe ring",
         badge: "TRENDING",
+        image:"https://www.candere.com/media/jewellery/images/LCR0579_1.jpeg"
       },
     ],
   },
@@ -573,7 +579,7 @@ const categoryBanners = {
     alt: "Other Jewellery Banner",
   },
   gifts: {
-    image: "https://www.candere.com/media/catalog/category/Gift-Listing-Page-Banner.jpg",
+    image: "https://www.candere.com/media/catalog/category/Gifting-Desktop.jpg",
     alt: "Gifts Banner",
   },
 };
