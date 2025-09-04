@@ -50,15 +50,17 @@ export default function Component() {
 
         {/* Hero Section */}
         <section className="relative w-full h-[600px] sm:h-[500px] md:h-[400px] lg:h-[600px] bg-gradient-to-r from-[#006666] to-[#009999] flex items-center justify-center overflow-hidden">
-          <Image
-            src="https://www.candere.com/media/home_page_images/slider/Banner_170725.jpg"
-            alt="Shah Rukh Khan with jewelry"
-            fill
-            className="object-cover object-center md:object-[center_top] lg:object-[center_top] xl:object-[center_top] 2xl:object-[center_top] rounded-b-3xl shadow-2xl"
-            style={{ objectPosition: "center -100px" }} // Adjust object position to show SRK
-            priority
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
-          />
+          <div className="absolute inset-0">
+            <Image
+              src="https://www.candere.com/media/home_page_images/slider/Banner_170725.jpg"
+              alt="Shah Rukh Khan with jewelry"
+              fill
+              className="object-cover object-center sm:object-[center_top] md:object-[center_top] lg:object-[center_top] rounded-b-3xl shadow-2xl"
+              style={{ objectPosition: "center -100px" }}
+              priority
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+            />
+          </div>
         </section>
 
         {/* Showrooms Banner */}
@@ -77,10 +79,10 @@ export default function Component() {
 
         {/* Jewellery Flair Section */}
         <section className="bg-white py-16 px-4 md:px-8 text-center">
-          <div className="flex justify-center gap-8 mb-12">
+          <div className="flex flex-wrap justify-center gap-8 mb-12">
             <Button
               onClick={() => setActive(0)}
-              className={`text-lg font-semibold text-gray-900  bg-transparent hover:bg-transparent  pb-1 ${
+              className={`text-lg font-semibold text-gray-900 bg-transparent hover:bg-transparent pb-1 ${
                 Active === 0 ? "border-b-2 border-[#FADDA0]" : ""
               }`}
             >
@@ -88,7 +90,7 @@ export default function Component() {
             </Button>
             <Button
               onClick={() => setActive(1)}
-              className={`text-lg font-semibold text-gray-900  bg-transparent hover:bg-transparent  pb-1 ${
+              className={`text-lg font-semibold text-gray-900 bg-transparent hover:bg-transparent pb-1 ${
                 Active === 1 ? "border-b-2 border-[#FADDA0]" : ""
               }`}
             >
@@ -96,14 +98,14 @@ export default function Component() {
             </Button>
             <Button
               onClick={() => setActive(2)}
-              className={`text-lg font-semibold text-gray-900  bg-transparent hover:bg-transparent  pb-1 ${
+              className={`text-lg font-semibold text-gray-900 bg-transparent hover:bg-transparent pb-1 ${
                 Active === 2 ? "border-b-2 border-[#FADDA0]" : ""
               }`}
             >
               Curated for the Bold
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 gap-8 max-w-6xl mx-auto">
             <div className="relative w-full h-auto rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
               <Image
                 src={sectionImages[Active]}
@@ -113,7 +115,6 @@ export default function Component() {
                 className="object-cover w-full h-full rounded-full shadow-xl"
               />
             </div>
-            
           </div>
         </section>
 
@@ -306,34 +307,6 @@ export default function Component() {
               <h2 className="text-3xl font-bold mb-6">
                 Discover the magic In-Person! at a Store Near You!
               </h2>
-              <div className="flex gap-2 mb-6">
-                <Input
-                  type="text"
-                  placeholder="Enter Pincode"
-                  className="flex-grow bg-gray-800 border-gray-700 text-white placeholder-gray-400 rounded-md px-4 py-2"
-                />
-                <Button className="bg-white text-gray-900 hover:bg-gray-100 px-6 py-2 rounded-md font-semibold">
-                  SUBMIT
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div className="bg-gray-800 p-4 rounded-lg flex items-center gap-3 text-left">
-                  <MapPin className="w-6 h-6 text-white" />
-                  <div>
-                    <p className="font-semibold">Nearest Store</p>
-                    <p className="text-sm">Malad Infiniti Mall</p>
-                    <p className="text-xs text-gray-400">0.73 km</p>
-                  </div>
-                </div>
-                <div className="bg-gray-800 p-4 rounded-lg flex items-center gap-3 text-left">
-                  <MapPin className="w-6 h-6 text-white" />
-                  <div>
-                    <p className="font-semibold">Nearest Store</p>
-                    <p className="text-sm">Goregaon MG Road</p>
-                    <p className="text-xs text-gray-400">2.55 km</p>
-                  </div>
-                </div>
-              </div>
               <div className="flex flex-col md:flex-row gap-4 mb-8">
                 <Button className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold flex-grow">
                   DISCOVER NOW!
@@ -390,10 +363,8 @@ export default function Component() {
                   <span className="text-lg font-bold text-gray-900">
                     CANDERE
                   </span>
-                  {/* The cart icon in this section is part of the mock phone UI, not the main navigation */}
                   <div className="relative">
                     <ShoppingCart className="w-6 h-6 text-gray-700" />
-                    {/* This count is static for the mock phone UI */}
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                       3
                     </span>
