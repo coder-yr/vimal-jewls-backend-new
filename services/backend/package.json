@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "BACKEND FOR GETnGLOW ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SM DIGITAL TECHNOLOGIES",
+  "license": "ISC",
+  "dependencies": {
+    "modules": "file:../../modules",
+    "multer": "^2.0.2"
+  }
+}
