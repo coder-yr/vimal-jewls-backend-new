@@ -95,6 +95,17 @@ const admin = new AdminJS({
         },
       },
     },
+    // Admin logs resource
+    {
+      resource: db.adminLogs,
+      options: {
+        navigation: {
+          icon: "Document",
+        },
+        listProperties: ["adminEmail", "action", "resource", "details", "createdAt"],
+        properties: {},
+      },
+    },
 
     {
       resource: db.megaCategories,

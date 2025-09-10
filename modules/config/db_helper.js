@@ -1,6 +1,10 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import banners from "../models/banners.js";
+import users from "../models/users.js";
+import orders from "../models/orders.js";
+import categories from "../models/categories.js";
+import collections from "../models/collections.js";
 import megaCategories from "../models/mega_categories.js";
 import home from "../models/home.js";
 import products from "../models/products.js";
@@ -10,6 +14,7 @@ import occasions from "../models/occasions.js";
 import shopFor from "../models/shopFor.js";
 import styles from "../models/styles.js";
 import subBanners from "../models/sub_banners.js";
+import adminLogs from "../models/admin_logs.js";
 
 // CREATEs A DATABASE CONNECTION AND INSTANCE
 const createDatabaseReference = () => {
@@ -62,6 +67,11 @@ const createDatabaseReference = () => {
     home: home(sequelize),
     products: products(sequelize),
     runningList: runningList(sequelize),
+    categories: categories(sequelize),
+    collections: collections(sequelize),
+    orders: orders(sequelize),
+    users: users(sequelize),
+    adminLogs: adminLogs(sequelize, Sequelize.DataTypes),
   };
 
   // MAPPINGs
@@ -98,22 +108,22 @@ const createDatabaseReference = () => {
     foreignKey: "megaCategoryId",
   });
 
-  // db.categories.hasMany(db.products, {
-  //   as: "products",
-  //   foreignKey: "categoryId",
-  // });
-  // db.products.belongsTo(db.categories, {
-  //   as: "productCategory",
-  //   foreignKey: "categoryId",
-  // });
-  // db.collections.hasMany(db.products, {
-  //   as: "products",
-  //   foreignKey: "collectionId",
-  // });
-  // db.products.belongsTo(db.collections, {
-  //   as: "productCollection",
-  //   foreignKey: "collectionId",
-  // });
+  db.categories.hasMany(db.products, {
+    as: "products",
+    foreignKey: "categoryId",
+  });
+  db.products.belongsTo(db.categories, {
+    as: "productCategory",
+    foreignKey: "categoryId",
+  });
+  db.collections.hasMany(db.products, {
+    as: "products",
+    foreignKey: "collectionId",
+  });
+  db.products.belongsTo(db.collections, {
+    as: "productCollection",
+    foreignKey: "collectionId",
+  });
 
   return db;
 };

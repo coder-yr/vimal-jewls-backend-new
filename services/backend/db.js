@@ -1,4 +1,4 @@
-import createDatabaseReference from "../../modules/config/db_helper";
+import createDatabaseReference from "../../modules/config/db_helper.js";
 
 const db = createDatabaseReference();
 
