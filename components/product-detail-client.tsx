@@ -2,6 +2,47 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
+interface ProductImage {
+  src: string;
+  alt: string;
+  type?: string;
+}
+
+interface RelatedProduct {
+  id: string;
+  name: string;
+  image?: string;
+  currentPrice?: string;
+  originalPrice?: string;
+  rating?: number;
+  reviews?: number;
+  badge?: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  description?: string;
+  images?: ProductImage[] | string; // Can be string when coming from DB
+  badges?: string[];
+  youMayAlsoLike?: RelatedProduct[];
+  reviews?: any[];
+  priceBreakup?: any[];
+  grandTotal?: string;
+  productSummary?: {
+    [key: string]: string;
+  };
+  currentPrice?: string;
+  price?: string;
+  originalPrice?: string;
+  mrp?: string;
+  slug: string;
+  shortcode: string;
+  categoryId: number;
+  collectionId: number;
+  [key: string]: any; // For other fields we might receive
+}
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -387,20 +428,41 @@ const products = [
   },
 ];
 
-export default function ProductDetailClient({ product }: { product: any }) {
+export default function ProductDetailClient({ product }: { product: Product }) {
+  // Ensure product data is safe to use with defaults
+  const safeProduct = {
+    ...product,
+    images: Array.isArray(product.images) && product.images.length > 0
+      ? product.images
+      : [{
+          src: "/placeholder.jpg",
+          alt: product.name || "Product Image"
+        }],
+    currentPrice: product.currentPrice || product.price || "0",
+    originalPrice: product.originalPrice || product.mrp || "0",
+    badges: Array.isArray(product.badges) ? product.badges : [],
+    youMayAlsoLike: Array.isArray(product.youMayAlsoLike) ? product.youMayAlsoLike : [],
+    reviews: Array.isArray(product.reviews) ? product.reviews : [],
+    priceBreakup: Array.isArray(product.priceBreakup) ? product.priceBreakup : [],
+    description: product.description || "No description available"
+  };
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState(product.images[0].src);
+  const [selectedImage, setSelectedImage] = useState(
+    Array.isArray(safeProduct.images) && safeProduct.images.length > 0
+      ? safeProduct.images[0].src
+      : "/placeholder.jpg"
+  );
   const [imageSlots, setImageSlots] = useState<(string | null)[]>([null, null, null]);
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        id: product.id,
-        name: product.name,
-        price: Number.parseFloat(product.currentPrice.replace(/,/g, "")),
+        id: String(safeProduct.id),
+        name: safeProduct.name,
+        price: Number.parseFloat((safeProduct.currentPrice || "0").replace(/,/g, "")),
         quantity: 1,
-        image: product.images[0].src,
+        image: Array.isArray(safeProduct.images) && safeProduct.images[0]?.src || "/placeholder.jpg",
         metal: "14K Yellow Gold (1.51g)", // Mock metal detail
       })
     );
@@ -410,11 +472,11 @@ export default function ProductDetailClient({ product }: { product: any }) {
   const handleBuyNow = () => {
     dispatch(
       addToCart({
-        id: product.id,
-        name: product.name,
-        price: Number.parseFloat(product.currentPrice.replace(/,/g, "")),
+        id: String(safeProduct.id), // Convert to string to satisfy type
+        name: safeProduct.name,
+        price: Number.parseFloat((safeProduct.currentPrice || "0").replace(/,/g, "")),
         quantity: 1,
-        image: product.images[0].src,
+        image: safeProduct.images[0].src,
         metal: "14K Yellow Gold (1.51g)", // Mock metal detail
       })
     );
@@ -449,25 +511,15 @@ export default function ProductDetailClient({ product }: { product: any }) {
         <Link href="/category/earrings" className="hover:underline">
           Earrings
         </Link>{" "}
-        / <span className="font-semibold">{product.name}</span>
+        / <span className="font-semibold">{safeProduct.name}</span>
       </div>
       <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 max-w-7xl mx-auto w-full">
         {/* Left Section - Product Images */}
         <div className="flex-1 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
-            {product.images.map((item, idx) => (
-              item.type === "video" ? (
-                <video
-                  key={idx}
-                  controls
-                  className="object-contain rounded-lg w-full"
-                  width={500}
-                  height={500}
-                >
-                  <source src={item.src} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              ) : (
+            {safeProduct.images
+              .filter((img: ProductImage) => !img.type || img.type === "image")
+              .map((item: ProductImage, idx: number) => (
                 <Zoom key={idx}>
                   <Image
                     src={item.src || "/placeholder.svg"}
@@ -477,8 +529,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
                     className="object-contain rounded-lg w-full"
                   />
                 </Zoom>
-              )
-            ))}
+              ))}
           </div>
         </div>
         {/* Right Section - Product Details Card */}
@@ -503,7 +554,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
             <ChevronDown className="ml-1 w-4 h-4" />
           </Button>
           <div className="flex gap-2 mb-2">
-            {product.badges.map((badge) => (
+            {safeProduct.badges?.map((badge) => (
               <span
                 key={badge}
                 className={`px-3 py-1 text-xs font-semibold rounded-full ${
@@ -636,7 +687,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
         <div className="mt-10 grid gap-8 md:grid-cols-[320px,1fr]">
           <div className="space-y-6">
             <div className="flex items-start gap-6">
-              <Image src={product.images[0]?.src || "/placeholder.svg"} alt={product.images[0]?.alt || product.name} width={80} height={80} className="rounded-lg object-contain" />
+              <Image 
+                src={Array.isArray(safeProduct.images) && safeProduct.images[0]?.src || "/placeholder.svg"} 
+                alt={Array.isArray(safeProduct.images) && safeProduct.images[0]?.alt || safeProduct.name} width={80} height={80} className="rounded-lg object-contain" />
               <div>
                 <h3 className="font-semibold text-lg mb-2">✨Fashionable Glamour, Sparkling Elegance!</h3>
                 <p className="text-gray-700 leading-relaxed">
@@ -645,7 +698,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
               </div>
             </div>
             <ProductSummaryCard
-              data={Object.entries(product.productSummary || {}).reduce(
+              data={Object.entries(safeProduct.productSummary || {}).reduce<{[key: string]: string}>(
                 (acc, [key, value]) => {
                   acc[key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())] =
                     value ? String(value) : "N/A";
@@ -670,7 +723,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
         </div>
       </main>
       <div className="you-may-also-like-section grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {product.youMayAlsoLike.map((item) => (
+        {product.youMayAlsoLike?.map((item) => (
           <div key={item.id} className="flex flex-col items-center">
             <div className="relative w-40 h-40 rounded-lg shadow-md overflow-hidden">
               <Image

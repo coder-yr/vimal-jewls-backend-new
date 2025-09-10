@@ -1,10 +1,36 @@
+"use client"
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useState } from "react";
+import { signinUser } from "@/lib/api";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(
+    searchParams.get("success") ? "Signup successful! Please sign in." : ""
+  );
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setMessage("");
+    setLoading(true);
+    const result = await signinUser(form);
+    if (result.error) setMessage(result.error);
+    else {
+      setMessage("");
+      if (result.token) localStorage.setItem("token", result.token);
+      router.push("/");
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
@@ -23,7 +49,7 @@ export default function SignInPage() {
             Sign In to Your Account
           </h2>
         </div>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <Label
               htmlFor="email"
@@ -36,6 +62,10 @@ export default function SignInPage() {
               type="email"
               placeholder="you@example.com"
               required
+              value={form.email}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, email: e.target.value }))
+              }
               className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-[#009999] focus:ring-[#009999]"
             />
           </div>
@@ -59,16 +89,32 @@ export default function SignInPage() {
               type="password"
               placeholder="••••••••"
               required
+              value={form.password}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, password: e.target.value }))
+              }
               className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-[#009999] focus:ring-[#009999]"
             />
           </div>
           <Button
             type="submit"
             className="w-full rounded-md bg-[#009999] py-2 text-lg font-semibold text-white hover:bg-[#007a7a]"
+            disabled={loading}
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
         </form>
+        {message && (
+          <div
+            className={`mt-4 text-center text-sm ${
+              message.includes("success")
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {message}
+          </div>
+        )}
         <div className="mt-8 text-center text-sm text-gray-600">
           {"Don't have an account? "}
           <Link

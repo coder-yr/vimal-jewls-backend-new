@@ -367,29 +367,20 @@ const Header = () => {
   };
 
   return (
-    <>
+    <div className="relative w-full">
       <header className="bg-black text-white py-2 px-4 md:px-8 flex justify-between items-center text-xs">
         <div className="flex items-center gap-4">
-          <Link
-            href="#"
-            className="flex items-center gap-1 text-gray-400 hover:text-white"
-          >
+          <Link href="#" className="flex items-center gap-1 text-gray-400 hover:text-white">
             <Truck className="w-3 h-3" />
             <span>ORDER TRACKING</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <Link
-            href="#"
-            className="flex items-center gap-1 text-gray-400 hover:text-white"
-          >
+          <Link href="#" className="flex items-center gap-1 text-gray-400 hover:text-white">
             <Headset className="w-3 h-3" />
             <span>CONTACT US</span>
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-1 text-gray-400 hover:text-white"
-          >
+          <Link href="#" className="flex items-center gap-1 text-gray-400 hover:text-white">
             <FileText className="w-3 h-3" />
             <span>BLOG</span>
           </Link>
@@ -400,95 +391,39 @@ const Header = () => {
       <nav className="bg-black py-4 px-4 md:px-8 border-b border-gray-800 flex items-center justify-between sticky top-0 z-40 shadow-lg">
         <div className="flex-1 flex items-center gap-6">
           <div className="hidden md:block w-96">
-            <AnimatedSearchInput
-              suggestions={["Search for Rings", "Search for Earrings", "Search for Necklaces", "Search for Bracelets", "Search for Mangalsutra"]}
-            />
+            <AnimatedSearchInput suggestions={["Search for Rings", "Search for Earrings", "Search for Necklaces", "Search for Bracelets", "Search for Mangalsutra"]} />
           </div>
         </div>
         <div className="flex flex-col items-center flex-shrink-0">
-          <Image
-            src="/logo.png"
-            alt="Vimal Jewellers Logo"
-            width={60}
-            height={60}
-            className="object-cover h-auto mx-auto"
-            priority
-          />
-          <span className="block text-xs mt-1 font-normal text-[#3ed6e0] tracking-widest" style={{ letterSpacing: '0.2em' }}>
-            VIMAL JEWELLERS
-          </span>
-          <span className="block text-[10px] font-light text-white tracking-widest" style={{ letterSpacing: '0.15em' }}>
-            LIFESTYLE JEWELLERY
-          </span>
+          <Image src="/logo.png" alt="Vimal Jewellers Logo" width={60} height={60} className="object-cover h-auto mx-auto" priority />
+          <span className="block text-xs mt-1 font-normal text-[#3ed6e0] tracking-widest" style={{ letterSpacing: '0.2em' }}>VIMAL JEWELLERS</span>
+          <span className="block text-[10px] font-light text-white tracking-widest" style={{ letterSpacing: '0.15em' }}>LIFESTYLE JEWELLERY</span>
         </div>
         <div className="flex-1 flex items-center justify-end gap-4">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <MapPin className="w-5 h-5 text-[#FADDA0]" />
-            <span className="sr-only">Pincode</span>
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Store className="w-5 h-5 text-[#FADDA0]" />
-            <span className="sr-only">Store Locator</span>
-          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full"><MapPin className="w-5 h-5 text-[#FADDA0]" /><span className="sr-only">Pincode</span></Button>
+          <Button variant="ghost" size="icon" className="rounded-full"><Store className="w-5 h-5 text-[#FADDA0]" /><span className="sr-only">Store Locator</span></Button>
           <UserDropdown />
-          <Button variant="ghost" size="icon" className="rounded-full relative">
-            <Heart className="w-5 h-5 text-[#FADDA0]" />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              0
-            </span>
-            <span className="sr-only">Wishlist</span>
-          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full relative"><Heart className="w-5 h-5 text-[#FADDA0]" /><span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span><span className="sr-only">Wishlist</span></Button>
           <HeaderCartIcon />
         </div>
       </nav>
 
-  {/* Category Navigation with Mega Menu (Sticky) */}
-  <div className="bg-black py-3 px-4 md:px-8 border-b border-gray-800 sticky top-[72px] z-30">
-        <div className="flex justify-center overflow-x-auto whitespace-nowrap scrollbar-hide">
-          {categories.map((item) => (
-            <div
-              key={item}
-              className="relative"
-              onMouseEnter={() => setHoveredCategory(item)}
-              onMouseLeave={() => setHoveredCategory(null)}
-            >
-              <Link
-                href={`/category/${item
-                  .toLowerCase()
-                  .replace(/ & /g, "-")
-                  .replace(/ /g, "-")}`}
-                className={`px-3 py-1 text-xs font-medium block ${
-                  item === "NEW ARRIVALS"
-                    ? "text-[#FADDA0]"
-                    : "text-white hover:text-gray-300"
-                }`}
-              >
-                {item}
-              </Link>
-            </div>
-          ))}
-          <Button
-            variant="outline"
-            className="border-[#FADDA0] text-[#FADDA0] px-3 py-1 text-xs font-medium rounded-md ml-4 bg-transparent"
-          >
-            OFFERS
-          </Button>
-          <Button
-            variant="outline"
-            className="border-[#FADDA0] text-[#FADDA0] px-3 py-1 text-xs font-medium rounded-md ml-2 flex items-center bg-transparent"
-          >
-            FEATURES <ChevronDown className="w-3 h-3 ml-1" />
-          </Button>
+      {/* Category Navigation with Mega Menu (Sticky) */}
+      <div className="bg-black py-3 px-4 md:px-8 border-b border-gray-800 sticky top-[72px] z-30 overflow-hidden">
+        <div className="max-w-full overflow-x-auto no-scrollbar">
+          <div className="flex items-center justify-start min-w-max px-2">
+            {categories.map((item) => (
+              <div key={item} className="relative flex-shrink-0" onMouseEnter={() => setHoveredCategory(item)} onMouseLeave={() => setHoveredCategory(null)}>
+                <Link href={`/category/${item.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`} className={`px-3 py-1 text-xs font-medium block whitespace-nowrap ${item === "NEW ARRIVALS" ? "text-[#FADDA0]" : "text-white hover:text-gray-300"}`}>{item}</Link>
+              </div>
+            ))}
+            <Button variant="outline" className="border-[#FADDA0] text-[#FADDA0] px-3 py-1 text-xs font-medium rounded-md ml-4 bg-transparent">OFFERS</Button>
+            <Button variant="outline" className="border-[#FADDA0] text-[#FADDA0] px-3 py-1 text-xs font-medium rounded-md ml-2 flex items-center bg-transparent">FEATURES <ChevronDown className="w-3 h-3 ml-1" /></Button>
+          </div>
         </div>
-
         {/* Mega Menu */}
         {hoveredCategory && (
-          <div
-            onMouseEnter={() => setHoveredCategory(hoveredCategory)}
-            onMouseLeave={() => setHoveredCategory(null)}
-          >
-            {renderMegaMenu(hoveredCategory)}
-          </div>
+          <div onMouseEnter={() => setHoveredCategory(hoveredCategory)} onMouseLeave={() => setHoveredCategory(null)}>{renderMegaMenu(hoveredCategory)}</div>
         )}
       </div>
 
@@ -496,40 +431,21 @@ const Header = () => {
       <div className="md:hidden bg-black py-4 px-4 border-t border-gray-800">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <AnimatedSearchInput
-              suggestions={["Search for Rings", "Search for Earrings", "Search for Necklaces", "Search for Bracelets", "Search for Mangalsutra"]}
-            />
+            <AnimatedSearchInput suggestions={["Search for Rings", "Search for Earrings", "Search for Necklaces", "Search for Bracelets", "Search for Mangalsutra"]} />
           </div>
           <div>
-            <Button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              variant="outline"
-              className="border-[#FADDA0] text-[#FADDA0] rounded-md"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
+            <Button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} variant="outline" className="border-[#FADDA0] text-[#FADDA0] rounded-md"><Menu className="w-5 h-5" /></Button>
           </div>
         </div>
-
         {isMobileMenuOpen && (
           <div className="mt-4 bg-black rounded-lg shadow-md">
             {categories.map((category) => (
-              <Link
-                key={category}
-                href={`/category/${category
-                  .toLowerCase()
-                  .replace(/ & /g, "-")
-                  .replace(/ /g, "-")}`}
-                className="block px-4 py-2 text-sm font-medium text-white hover:bg-[#FADDA0] hover:text-black transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {category}
-              </Link>
+              <Link key={category} href={`/category/${category.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`} className="block px-4 py-2 text-sm font-medium text-white hover:bg-[#FADDA0] hover:text-black transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{category}</Link>
             ))}
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

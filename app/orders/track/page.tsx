@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,12 @@ import { CheckoutProgress } from "@/components/checkout-progress" // Reusing for
 import { Package, Truck, CheckCircle, XCircle, Clock } from 'lucide-react'
 
 export default function OrderTrackingPage() {
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      router.push("/auth/sign-in");
+    }
+  }, [router]);
   const searchParams = useSearchParams()
   const initialOrderId = searchParams.get("orderId") || ""
   const [orderId, setOrderId] = useState(initialOrderId)

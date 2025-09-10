@@ -50,17 +50,15 @@ export default function Component() {
 
         {/* Hero Section */}
         <section className="relative w-full h-[600px] sm:h-[500px] md:h-[400px] lg:h-[600px] bg-gradient-to-r from-[#006666] to-[#009999] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0">
-            <Image
-              src="https://www.candere.com/media/home_page_images/slider/Banner_170725.jpg"
-              alt="Shah Rukh Khan with jewelry"
-              fill
-              className="object-cover object-center sm:object-[center_top] md:object-[center_top] lg:object-[center_top] rounded-b-3xl shadow-2xl"
-              style={{ objectPosition: "center -100px" }}
-              priority
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
-            />
-          </div>
+          <Image
+            src="https://www.candere.com/media/home_page_images/slider/Banner_170725.jpg"
+            alt="Shah Rukh Khan with jewelry"
+            fill
+            className="object-cover object-center md:object-[center_top] lg:object-[center_top] xl:object-[center_top] 2xl:object-[center_top] rounded-b-3xl shadow-2xl"
+            style={{ objectPosition: "center -100px" }}
+            priority
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+          />
         </section>
 
         {/* Showrooms Banner */}

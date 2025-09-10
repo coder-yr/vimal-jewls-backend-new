@@ -1,24 +1,57 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+
+interface UserProfile {
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  email?: string;
+  phone?: string;
+  alternatePhone?: string;
+  gender?: string;
+  dob?: string;
+  anniversary?: string;
+}
 
 export default function ProfilePage() {
-  const router = useRouter()
+  const router = useRouter();
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const user = {
-    firstName: "Time",
-    lastName: "passes",
-    email: "timepasses217@gmail.com",
-    phone: "9876543210",
-    alternatePhone: "",
-    gender: "",
-    dob: "",
-    anniversary: "",
-  }
+  useEffect(() => {
+    async function fetchProfile() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("sign in to view profile");
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await fetch("http://localhost:7502/api/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to fetch profile");
+        setUser(data.profile);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Unknown error");
+        }
+      }
+      setLoading(false);
+    }
+    fetchProfile();
+  }, []);
 
   const sidebarLinks = [
     { label: "My Orders", href: "/orders" },
@@ -31,7 +64,11 @@ export default function ProfilePage() {
     { label: "My Schedule Call", href: "/schedule-call" },
     { label: "DigiGold Locker", href: "/digigold-locker" },
     { label: "Earn Rewards", href: "/earn-rewards" },
-  ]
+  ];
+
+  if (loading) return <div className="p-8 text-center">Loading profile...</div>;
+  if (error) return <div className="p-8 text-center text-red-600">{error}</div>;
+  if (!user) return null;
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
@@ -44,7 +81,7 @@ export default function ProfilePage() {
             className="w-16 h-16 rounded-full mx-auto"
           />
           <p className="mt-2 text-sm font-medium">WELCOME,</p>
-          <p className="text-lg font-semibold">Time passes</p>
+          <p className="text-lg font-semibold">{user.firstName || user.username || user.email}</p>
         </div>
         <nav className="space-y-4">
           {sidebarLinks.map((link) => (
@@ -58,7 +95,13 @@ export default function ProfilePage() {
           ))}
         </nav>
         <Separator className="my-4" />
-        <Button className="w-full bg-[#009999] text-white hover:bg-[#007a7a] py-2 rounded-md font-semibold">
+        <Button
+          className="w-full bg-[#009999] text-white hover:bg-[#007a7a] py-2 rounded-md font-semibold"
+          onClick={() => {
+            localStorage.removeItem("token");
+            router.push("/auth/sign-in");
+          }}
+        >
           LOGOUT
         </Button>
       </aside>
@@ -71,26 +114,26 @@ export default function ProfilePage() {
             <Label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
               First Name
             </Label>
-            <Input id="firstName" type="text" defaultValue={user.firstName} className="w-full" />
+            <Input id="firstName" type="text" defaultValue={user.firstName || ""} className="w-full" />
           </div>
           <div>
             <Label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
               Last Name
             </Label>
-            <Input id="lastName" type="text" defaultValue={user.lastName} className="w-full" />
+            <Input id="lastName" type="text" defaultValue={user.lastName || ""} className="w-full" />
           </div>
           <div>
             <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </Label>
-            <Input id="email" type="email" defaultValue={user.email} className="w-full" disabled />
+            <Input id="email" type="email" defaultValue={user.email || ""} className="w-full" disabled />
           </div>
           <div>
             <Label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
               Mobile No.
             </Label>
             <div className="flex flex-col sm:flex-row gap-2">
-              <Input id="phone" type="tel" defaultValue={user.phone} className="flex-1" />
+              <Input id="phone" type="tel" defaultValue={user.phone || ""} className="flex-1" />
               <Button className="bg-[#009999] text-white hover:bg-[#007a7a] py-2 rounded-md font-semibold">
                 VERIFY
               </Button>
@@ -100,25 +143,25 @@ export default function ProfilePage() {
             <Label htmlFor="alternatePhone" className="block text-sm font-medium text-gray-700 mb-1">
               Alternate Mobile No. (Optional)
             </Label>
-            <Input id="alternatePhone" type="tel" defaultValue={user.alternatePhone} className="w-full" />
+            <Input id="alternatePhone" type="tel" defaultValue={user.alternatePhone || ""} className="w-full" />
           </div>
           <div>
             <Label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
               Gender
             </Label>
-            <Input id="gender" type="text" defaultValue={user.gender} className="w-full" />
+            <Input id="gender" type="text" defaultValue={user.gender || ""} className="w-full" />
           </div>
           <div>
             <Label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">
               Date of Birth
             </Label>
-            <Input id="dob" type="date" defaultValue={user.dob} className="w-full" />
+            <Input id="dob" type="date" defaultValue={user.dob || ""} className="w-full" />
           </div>
           <div>
             <Label htmlFor="anniversary" className="block text-sm font-medium text-gray-700 mb-1">
               Anniversary Date
             </Label>
-            <Input id="anniversary" type="date" defaultValue={user.anniversary} className="w-full" />
+            <Input id="anniversary" type="date" defaultValue={user.anniversary || ""} className="w-full" />
           </div>
         </div>
 
@@ -149,5 +192,5 @@ export default function ProfilePage() {
         </div>
       </main>
     </div>
-  )
+  );
 }

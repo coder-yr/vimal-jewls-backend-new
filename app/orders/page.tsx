@@ -1,4 +1,6 @@
 "use client"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -6,6 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Package, Truck, CheckCircle, XCircle } from 'lucide-react'
 
 export default function MyOrdersPage() {
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      router.push("/auth/sign-in");
+    }
+  }, [router]);
   const orders = [
     {
       id: "ORD123456789",
@@ -37,6 +45,12 @@ export default function MyOrdersPage() {
   ]
 
   const getStatusIcon = (status: string) => {
+        const router = useRouter();
+        useEffect(() => {
+          if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+            router.push("/auth/sign-in");
+          }
+        }, [router]);
     switch (status) {
       case "Delivered":
         return <CheckCircle className="w-5 h-5 text-green-500" />

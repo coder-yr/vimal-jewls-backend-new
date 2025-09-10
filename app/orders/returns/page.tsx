@@ -7,9 +7,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Package, AlertCircle, CheckCircle } from "lucide-react"
 
 export default function ReturnsPage() {
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
+      router.push("/auth/sign-in");
+    }
+  }, [router]);
   const [orderId, setOrderId] = useState("")
   const [reason, setReason] = useState("")
   const [comments, setComments] = useState("")
