@@ -6,11 +6,12 @@ import { UserDropdown } from "@/components/user-dropdown";
 import { ChevronDown, FileText, Headset, Heart, MapPin, Menu, Search, Store, Truck } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Header = () => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
   const categories = [
     "BESTSELLERS",
@@ -366,6 +367,25 @@ const Header = () => {
     );
   };
 
+  useEffect(() => {
+    const fetchWishlistCount = async () => {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      try {
+        const res = await fetch("http://localhost:7502/api/wishlist", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setWishlistCount(data.products.length || 0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch wishlist count", error);
+      }
+    };
+
+    fetchWishlistCount();
+  }, []);
+
   return (
     <div className="relative w-full">
       <header className="bg-black text-white py-2 px-4 md:px-8 flex justify-between items-center text-xs">
@@ -403,7 +423,18 @@ const Header = () => {
           <Button variant="ghost" size="icon" className="rounded-full"><MapPin className="w-5 h-5 text-[#FADDA0]" /><span className="sr-only">Pincode</span></Button>
           <Button variant="ghost" size="icon" className="rounded-full"><Store className="w-5 h-5 text-[#FADDA0]" /><span className="sr-only">Store Locator</span></Button>
           <UserDropdown />
-          <Button variant="ghost" size="icon" className="rounded-full relative"><Heart className="w-5 h-5 text-[#FADDA0]" /><span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span><span className="sr-only">Wishlist</span></Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full relative"
+            onClick={() => window.location.href = '/wishlist'}
+          >
+            <Heart className="w-5 h-5 text-[#FADDA0]" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {wishlistCount}
+            </span>
+            <span className="sr-only">Wishlist</span>
+          </Button>
           <HeaderCartIcon />
         </div>
       </nav>

@@ -17,12 +17,43 @@ export default function CheckoutPaymentPage() {
     }
   }, [router, cartItems])
 
-  const handlePayment = (method: string) => {
-    alert(`Simulating payment with ${method}...`)
-    // Simulate a delay for payment processing
-    setTimeout(() => {
-      router.push("/checkout/success")
-    }, 1500)
+  const handlePayment = async (method: string) => {
+    // Get address from localStorage
+    const address = typeof window !== "undefined" ? localStorage.getItem("shippingAddress") : "";
+    if (!address || cartItems.length === 0) {
+      alert("Missing address or cart items.");
+      return;
+    }
+    // Calculate total
+    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Get token
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    // Prepare order payload
+    const orderPayload = {
+      items: cartItems,
+      total,
+      status: "Processing",
+      address,
+      paymentMethod: method
+    };
+    try {
+      const res = await fetch("http://localhost:7502/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderPayload),
+      });
+      if (!res.ok) throw new Error("Order creation failed");
+      const order = await res.json();
+      // Optionally clear cart and address
+      localStorage.removeItem("shippingAddress");
+      // Redirect to confirmation page with order id
+      router.push(`/checkout/success?orderId=${order.id}`);
+    } catch (err) {
+      alert("Order failed. Please try again.");
+    }
   }
 
   return (

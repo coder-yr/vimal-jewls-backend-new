@@ -10,6 +10,7 @@ import { User } from 'lucide-react'
 export function UserDropdown() {
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const isSignedIn = typeof window !== "undefined" && !!localStorage.getItem("token");
 
   const handleLogout = () => {
     setShowConfirm(true);
@@ -25,7 +26,7 @@ export function UserDropdown() {
   const cancelLogout = () => {
     setShowConfirm(false);
   };
-
+ 
   return (
     <>
       <DropdownMenu>
@@ -36,22 +37,35 @@ export function UserDropdown() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
-          <DropdownMenuItem asChild>
-            <Link href="/profile" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Profile</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/orders" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Orders</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/orders/track" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Track Order</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/orders/returns" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Returns</Link>
-          </DropdownMenuItem>
-          <div className="border-t my-2" />
-          <DropdownMenuItem>
-            <button onClick={handleLogout} className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Logout</button>
-          </DropdownMenuItem>
+          {isSignedIn ? (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href="/profile" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/orders" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">My Orders</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/orders/track" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Track Order</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/orders/returns" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Returns</Link>
+              </DropdownMenuItem>
+              <div className="border-t my-2" />
+              <DropdownMenuItem>
+                <button onClick={handleLogout} className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Logout</button>
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href="/auth/sign-in" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Login</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/auth/sign-up" className="block w-full text-sm text-gray-700 hover:bg-gray-100 px-4 py-2">Sign Up</Link>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       {showConfirm && (

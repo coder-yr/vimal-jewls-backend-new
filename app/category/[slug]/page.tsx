@@ -12,6 +12,101 @@ import { useState } from "react" // Removed 'use' import
 import { useParams } from "next/navigation"
 
 // Dummy data for demonstration
+const products = [
+  {
+    id: 12,
+    slug: "chandrak-diamond-stud-earrings",
+    name: "Chandrak Diamond Stud Earrings",
+    currentPrice: "33,626",
+    originalPrice: "38,480",
+    discount: "20% Off on Stone Price",
+    rating: 4.7,
+    reviews: 3,
+    imageQuery: "diamond stud earrings",
+    badge: "TRENDING",
+    image: "https://www.candere.com/media/catalog/product/C/0/C025332_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 13,
+    slug: "scallop-gold-earrings",
+    name: "Scallop Gold Earrings",
+    currentPrice: "20,396",
+    originalPrice: "21,867",
+    discount: "25% OFF on Making",
+    rating: 4.8,
+    reviews: 28,
+    imageQuery: "scallop gold drop earrings",
+    badge: "BESTSELLER",
+    image: "https://www.candere.com/media/catalog/product/C/0/C014254__1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 14,
+    slug: "feather-scape-peacock-gold-and-gemstone-earrings",
+    name: "Feather Scape Peacock Gold And Gemstone Earrings",
+    currentPrice: "21,934",
+    originalPrice: "23,837",
+    discount: "25% OFF on Making",
+    rating: 4.8,
+    reviews: 26,
+    imageQuery: "peacock gold gemstone earrings",
+    badge: "BESTSELLER",
+    image: "https://www.candere.com/media/catalog/product/C/0/C022090_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 15,
+    slug: "splinter-diamond-stud-earrings",
+    name: "Splinter Diamond Stud Earrings",
+    currentPrice: "37,703",
+    originalPrice: "43,085",
+    discount: "100% off on Making Charges",
+    rating: 4.6,
+    reviews: 5,
+    imageQuery: "splinter diamond stud earrings",
+    badge: "LIMITED DEAL",
+    colorSwatch: "orange",
+    image: "https://www.candere.com/media/catalog/product/K/C/KC03978__1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 16,
+    slug: "black-enamel-diamond-earrings",
+    name: "Black Enamel Diamond Earrings",
+    currentPrice: "25,000",
+    originalPrice: "28,000",
+    discount: "15% OFF",
+    rating: 4.5,
+    reviews: 10,
+    imageQuery: "black enamel diamond earrings",
+    badge: "BESTSELLER",
+    image: "https://www.candere.com/media/catalog/product/L/C/LCE0485_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 17,
+    slug: "dangling-diamond-hoop-earrings",
+    name: "Dangling Diamond Hoop Earrings",
+    currentPrice: "30,500",
+    originalPrice: "35,000",
+    discount: "20% OFF",
+    rating: 4.7,
+    reviews: 15,
+    imageQuery: "dangling diamond hoop earrings",
+    badge: "LIMITED DEAL",
+    image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+  {
+    id: 1,
+    slug: "elenai-gold-hoop-earrings",
+    name: "Elenai Gold Hoop Earrings",
+    currentPrice: "12,463",
+    originalPrice: "13,552",
+    discount: "20% Off on Stone Price",
+    rating: 4.7,
+    reviews: 54,
+    imageQuery: "gold hoop earrings",
+    badge: "OUR PICK",
+    image: "https://www.candere.com/media/catalog/product/L/C/LCE0548_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
+  },
+];
+
 const productCategories = {
   earrings: {
     name: "Earrings",
@@ -81,66 +176,14 @@ const productCategories = {
           { label: "Diamond", value: "diamond", count: 1185 },
           { label: "Gold", value: "gold", count: 209 },
           { label: "Platinum", value: "platinum", count: 14 },
-          { label: "Solitaire", value: "solitaire", count: 45 },
         ],
-        initialVisible: 4,
-      },
-      {
-        id: "earrings-type",
-        name: "Earrings Type",
-        type: "checkbox",
-        options: [
-          { label: "Jhumkas", value: "jhumkas", count: 19 },
-          { label: "Studs", value: "studs", count: 780 },
-          { label: "Sui Dhaga", value: "sui-dhaga", count: 56 },
-          { label: "Hoops & Huggies", value: "hoops-huggies", count: 262 },
-          { label: "Drops & Dangles", value: "drops-dangles", count: 343 },
-          { label: "Multi Pierced", value: "multi-pierced", count: 13 },
-          { label: "Solitaire", value: "solitaire-earrings", count: 38 },
-          { label: "Front and back", value: "front-back", count: 6 },
-          { label: "Ear cuffs", value: "ear-cuffs", count: 31 },
-          { label: "Chandelier", value: "chandelier", count: 3 },
-          { label: "Chandbali", value: "chandbali", count: 9 },
-          { label: "Detachables", value: "detachables", count: 13 },
-          { label: "Miss - Match", value: "miss-match", count: 6 },
-        ],
-        initialVisible: 4,
-        expandedByDefault: true, // This filter is "Less" by default in the screenshot
-      },
-      {
-        id: "shop-for",
-        name: "Shop For",
-        type: "checkbox",
-        options: [
-          { label: "Women", value: "women", count: 1428 },
-          { label: "Men", value: "men", count: 42 },
-          { label: "Unisex", value: "unisex", count: 1 },
-          { label: "Kids", value: "kids", count: 52 },
-        ],
-        initialVisible: 4,
-      },
-      {
-        id: "price-range",
-        name: "Price Range",
-        type: "checkbox",
-        options: [
-          { label: "Below ₹10000", value: "below-10k", count: 35 },
-          { label: "₹10,001 - ₹15,000", value: "10k-15k", count: 124 },
-          { label: "₹15,001 - ₹20,000", value: "15k-20k", count: 120 },
-          { label: "₹20,001 - ₹25,000", value: "20k-25k", count: 135 },
-          { label: "₹25,001 - ₹30,000", value: "25k-30k", count: 173 },
-          { label: "₹30,001 - ₹50,000", value: "30k-50k", count: 591 },
-          { label: "₹50,001 - ₹75,000", value: "50k-75k", count: 263 },
-          { label: "₹75,001 - ₹1,00,000", value: "75k-100k", count: 59 },
-          { label: "Above ₹1,00,000", value: "above-100k", count: 24 },
-        ],
-        initialVisible: 4,
-        expandedByDefault: true, // This filter is "Less" by default in the screenshot
+        initialVisible: 3,
       },
     ],
     products: [
       {
-        id: "chandrak-diamond-stud-earrings",
+        id: 12,
+        slug: "chandrak-diamond-stud-earrings",
         name: "Chandrak Diamond Stud Earrings",
         currentPrice: "33,626",
         originalPrice: "38,480",
@@ -152,7 +195,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/C/0/C025332_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "scallop-gold-earrings",
+        id: 13,
+        slug: "scallop-gold-earrings",
         name: "Scallop Gold Earrings",
         currentPrice: "20,396",
         originalPrice: "21,867",
@@ -164,7 +208,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/C/0/C014254__1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "feather-scape-peacock-gold-and-gemstone-earrings",
+        id: 14,
+        slug: "feather-scape-peacock-gold-and-gemstone-earrings",
         name: "Feather Scape Peacock Gold And Gemstone Earrings",
         currentPrice: "21,934",
         originalPrice: "23,837",
@@ -176,7 +221,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/C/0/C022090_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "splinter-diamond-stud-earrings",
+        id: 15,
+        slug: "splinter-diamond-stud-earrings",
         name: "Splinter Diamond Stud Earrings",
         currentPrice: "37,703",
         originalPrice: "43,085",
@@ -189,7 +235,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/K/C/KC03978__1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "black-enamel-diamond-earrings",
+        id: 16,
+        slug: "black-enamel-diamond-earrings",
         name: "Black Enamel Diamond Earrings",
         currentPrice: "25,000",
         originalPrice: "28,000",
@@ -201,7 +248,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/L/C/LCE0485_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "dangling-diamond-hoop-earrings",
+        id: 17,
+        slug: "dangling-diamond-hoop-earrings",
         name: "Dangling Diamond Hoop Earrings",
         currentPrice: "30,500",
         originalPrice: "35,000",
@@ -213,7 +261,8 @@ const productCategories = {
         image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360"
       },
       {
-        id: "elenai-gold-hoop-earrings",
+        id: 1,
+        slug: "elenai-gold-hoop-earrings",
         name: "Elenai Gold Hoop Earrings",
         currentPrice: "12,463",
         originalPrice: "13,552",
@@ -280,44 +329,55 @@ const productCategories = {
     ],
   },
   necklace: {
-    name: "Necklace",
+    name: "Necklaces",
     filters: [
       {
-        id: "necklace-style",
-        name: "Necklace Style",
+        id: "material-type",
+        name: "Material Type",
         type: "checkbox",
         options: [
-          { label: "Pendant Necklace", value: "pendant", count: 200 },
-          { label: "Chain Necklace", value: "chain", count: 100 },
-          { label: "Choker Necklace", value: "choker", count: 50 },
+          { label: "Gold", value: "gold", count: 120 },
+          { label: "Diamond", value: "diamond", count: 80 },
         ],
-        initialVisible: 3,
+        initialVisible: 2,
+      },
+      {
+        id: "occasion",
+        name: "Occasion",
+        type: "checkbox",
+        options: [
+          { label: "Wedding", value: "wedding", count: 50 },
+          { label: "Party", value: "party", count: 30 },
+        ],
+        initialVisible: 2,
       },
     ],
     products: [
       {
-        id: "diamond-heart-pendant",
-        name: "Diamond Heart Pendant",
-        currentPrice: "35,000",
-        originalPrice: "40,000",
-        discount: "12% Off",
+        id: 21,
+        slug: "golden-pearl-necklace",
+        name: "Golden Pearl Necklace",
+        currentPrice: "45,000",
+        originalPrice: "50,000",
+        discount: "10% OFF",
         rating: 4.8,
-        reviews: 30,
-        imageQuery: "diamond heart pendant necklace",
-        badge: "BESTSELLER",
-        image: "https://www.candere.com/media/jewellery/images/KC03591__1.jpeg"
+        reviews: 25,
+        imageQuery: "golden pearl necklace",
+        badge: "TRENDING",
+        image: "https://example.com/golden-pearl-necklace.jpg",
       },
       {
-        id: "gold-chain-with-pearl",
-        name: "Gold Chain with Pearl",
-        currentPrice: "18,000",
-        originalPrice: "20,000",
-        discount: "10% Off",
-        rating: 4.6,
-        reviews: 18,
-        imageQuery: "gold chain with pearl necklace",
-        badge: "LIMITED DEAL",
-        image:"https://www.candere.com/media/jewellery/images/C019604_1_1.jpeg",
+        id: 22,
+        slug: "diamond-choker-necklace",
+        name: "Diamond Choker Necklace",
+        currentPrice: "1,20,000",
+        originalPrice: "1,50,000",
+        discount: "20% OFF",
+        rating: 4.9,
+        reviews: 40,
+        imageQuery: "diamond choker necklace",
+        badge: "BESTSELLER",
+        image: "https://example.com/diamond-choker-necklace.jpg",
       },
     ],
   },
@@ -547,6 +607,112 @@ const productCategories = {
     filters: [],
     products: [], // New arrivals would be dynamically fetched
   },
+  bracelets: {
+    name: "Bracelets",
+    filters: [
+      {
+        id: "material-type",
+        name: "Material Type",
+        type: "checkbox",
+        options: [
+          { label: "Gold", value: "gold", count: 100 },
+          { label: "Diamond", value: "diamond", count: 50 },
+        ],
+        initialVisible: 2,
+      },
+      {
+        id: "occasion",
+        name: "Occasion",
+        type: "checkbox",
+        options: [
+          { label: "Casual", value: "casual", count: 40 },
+          { label: "Formal", value: "formal", count: 30 },
+        ],
+        initialVisible: 2,
+      },
+    ],
+    products: [
+      {
+        id: 31,
+        slug: "golden-charm-bracelet",
+        name: "Golden Charm Bracelet",
+        currentPrice: "25,000",
+        originalPrice: "30,000",
+        discount: "15% OFF",
+        rating: 4.6,
+        reviews: 20,
+        imageQuery: "golden charm bracelet",
+        badge: "TRENDING",
+        image: "https://example.com/golden-charm-bracelet.jpg",
+      },
+      {
+        id: 32,
+        slug: "diamond-tennis-bracelet",
+        name: "Diamond Tennis Bracelet",
+        currentPrice: "75,000",
+        originalPrice: "85,000",
+        discount: "10% OFF",
+        rating: 4.8,
+        reviews: 35,
+        imageQuery: "diamond tennis bracelet",
+        badge: "BESTSELLER",
+        image: "https://example.com/diamond-tennis-bracelet.jpg",
+      },
+    ],
+  },
+  pendants: {
+    name: "Pendants",
+    filters: [
+      {
+        id: "material-type",
+        name: "Material Type",
+        type: "checkbox",
+        options: [
+          { label: "Gold", value: "gold", count: 80 },
+          { label: "Diamond", value: "diamond", count: 60 },
+        ],
+        initialVisible: 2,
+      },
+      {
+        id: "occasion",
+        name: "Occasion",
+        type: "checkbox",
+        options: [
+          { label: "Casual", value: "casual", count: 50 },
+          { label: "Formal", value: "formal", count: 30 },
+        ],
+        initialVisible: 2,
+      },
+    ],
+    products: [
+      {
+        id: 51,
+        slug: "golden-heart-pendant",
+        name: "Golden Heart Pendant",
+        currentPrice: "20,000",
+        originalPrice: "25,000",
+        discount: "20% OFF",
+        rating: 4.7,
+        reviews: 18,
+        imageQuery: "golden heart pendant",
+        badge: "TRENDING",
+        image: "https://example.com/golden-heart-pendant.jpg",
+      },
+      {
+        id: 52,
+        slug: "diamond-star-pendant",
+        name: "Diamond Star Pendant",
+        currentPrice: "50,000",
+        originalPrice: "60,000",
+        discount: "15% OFF",
+        rating: 4.8,
+        reviews: 25,
+        imageQuery: "diamond star pendant",
+        badge: "BESTSELLER",
+        image: "https://example.com/diamond-star-pendant.jpg",
+      },
+    ],
+  },
 }
 
 const categoryBanners = {
@@ -589,6 +755,16 @@ export default function CategoryPage() {
   const { slug } = params;
   const categoryData = productCategories[slug as keyof typeof productCategories];
   const bannerData = categoryBanners[slug as keyof typeof categoryBanners];
+
+  const [wishlist, setWishlist] = useState<string[]>([]);
+
+  const toggleWishlist = (productId: string) => {
+    setWishlist((prevWishlist) =>
+      prevWishlist.includes(productId)
+        ? prevWishlist.filter((id) => id !== productId)
+        : [...prevWishlist, productId]
+    );
+  };
 
   if (!categoryData) {
     return <div className="text-center py-10">Category not found.</div>;
@@ -702,15 +878,14 @@ export default function CategoryPage() {
                     variant="ghost"
                     size="icon"
                     className="bg-white rounded-full shadow-md"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleWishlist(product.id);
+                    }}
                   >
-                    <PlayCircle className="w-5 h-5 text-gray-700" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="bg-white rounded-full shadow-md"
-                  >
-                    <Heart className="w-5 h-5 text-gray-700" />
+                    <Heart
+                      className={`w-5 h-5 ${wishlist.includes(product.id) ? "text-red-500" : "text-gray-700"}`}
+                    />
                   </Button>
                 </div>
                 <Image

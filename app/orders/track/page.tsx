@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,61 +11,38 @@ import { CheckoutProgress } from "@/components/checkout-progress" // Reusing for
 import { Package, Truck, CheckCircle, XCircle, Clock } from 'lucide-react'
 
 export default function OrderTrackingPage() {
-  const router = useRouter();
-  useEffect(() => {
-    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
-      router.push("/auth/sign-in");
-    }
-  }, [router]);
+  useAuthGuard();
   const searchParams = useSearchParams()
   const initialOrderId = searchParams.get("orderId") || ""
   const [orderId, setOrderId] = useState(initialOrderId)
   const [trackingInfo, setTrackingInfo] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Dummy tracking data
-  const dummyTrackingData: { [key: string]: any } = {
-    "ORD123456789": {
-      status: "Delivered",
-      estimatedDelivery: "Delivered on July 22, 2024",
-      history: [
-        { date: "2024-07-22", time: "10:30 AM", description: "Delivered to customer." },
-        { date: "2024-07-21", time: "03:00 PM", description: "Out for delivery." },
-        { date: "2024-07-21", time: "08:00 AM", description: "Arrived at local distribution center." },
-        { date: "2024-07-20", time: "05:00 PM", description: "Shipped from warehouse." },
-        { date: "2024-07-20", time: "09:00 AM", description: "Order placed and confirmed." },
-      ],
-      product: { name: "Chandrak Diamond Stud Earrings", image: "https://www.candere.com/media/catalog/product/K/C/KC04453YG_1_5.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360?height=80&width=80" },
-    },
-    "ORD987654321": {
-      status: "Shipped",
-      estimatedDelivery: "July 25, 2024",
-      history: [
-        { date: "2024-07-18", time: "02:00 PM", description: "Shipped from warehouse." },
-        { date: "2024-07-17", time: "11:00 AM", description: "Order packed and ready for shipment." },
-        { date: "2024-07-15", time: "04:00 PM", description: "Order placed and confirmed." },
-      ],
-      product: { name: "Scallop Gold Earrings", image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360?height=80&width=80" },
-    },
-    "ORD112233445": {
-      status: "Processing",
-      estimatedDelivery: "July 28, 2024",
-      history: [
-        { date: "2024-07-10", time: "09:00 AM", description: "Order placed and confirmed." },
-      ],
-      product: { name: "Feather Scape Peacock Gold And Gemstone Earrings", image: "https://www.candere.com/media/jewellery/images/KC06683YG_2.jpeg?height=80&width=80" },
-    },
-  }
 
   const handleTrackOrder = () => {
-    setError(null)
-    const info = dummyTrackingData[orderId]
-    if (info) {
-      setTrackingInfo(info)
-    } else {
-      setError("Order not found. Please check the Order ID.")
-      setTrackingInfo(null)
+    setError(null);
+    setTrackingInfo(null);
+    if (!orderId) {
+      setError("Please enter an Order ID.");
+      return;
     }
+    // Get token
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    fetch(`http://localhost:7502/api/orders/${orderId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Order not found");
+        return res.json();
+      })
+      .then((data) => {
+        setTrackingInfo(data);
+      })
+      .catch(() => {
+        setError("Order not found. Please check the Order ID.");
+      });
   }
 
   useEffect(() => {
@@ -119,34 +97,47 @@ export default function OrderTrackingPage() {
             {/* Order Items Card */}
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-bold mb-4">Order Items</h2>
-              <div className="bg-[#fcfaf6] rounded-lg flex flex-col sm:flex-row items-center justify-between p-4">
-                <div className="flex items-center gap-4">
-                  <img src={trackingInfo.product.image || "/placeholder.svg"} alt={trackingInfo.product.name} width={64} height={64} className="object-contain rounded-md" />
-                  <div>
-                    <div className="font-semibold text-lg">{trackingInfo.product.name}</div>
-                    <div className="text-sm text-gray-500">SKU: CDR-001</div>
-                  </div>
-                </div>
-                <div className="text-xl font-semibold text-yellow-600">₹1,25,000</div>
+              <div className="flex flex-col gap-4">
+                {Array.isArray(trackingInfo.products) && trackingInfo.products.length > 0 ? (
+                  trackingInfo.products.map((item: any, idx: number) => (
+                    <div key={idx} className="bg-[#fcfaf6] rounded-lg flex flex-col sm:flex-row items-center justify-between p-4">
+                      <div className="flex items-center gap-4">
+                        <img src={item.image?.src || "/placeholder.svg"} alt={item.image?.alt || item.name || "Product"} width={64} height={64} className="object-contain rounded-md" />
+                        <div>
+                          <div className="font-semibold text-lg">{item.name || "Product Name"}</div>
+                          <div className="text-sm text-gray-500">SKU: {item.sku || "N/A"}</div>
+                          <div className="text-sm text-gray-500">Qty: {item.qty || 1}</div>
+                        </div>
+                      </div>
+                      <div className="text-xl font-semibold text-yellow-600">₹{item.price?.toLocaleString() || "0"}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-gray-500">No products found for this order.</div>
+                )}
               </div>
             </div>
 
             {/* Order Timeline Card */}
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-bold mb-4">Order Timeline</h2>
-              <div className="flex flex-col gap-4">
-                {trackingInfo.history.map((event: any, idx: number) => (
-                  <div key={idx} className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="text-gray-500 text-sm">{event.date} {event.time}</div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-lg">{event.description}</div>
-                    </div>
-                    <div>
-                      {getStatusIcon(trackingInfo.status)}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                <div className="flex flex-col gap-4">
+                  {Array.isArray(trackingInfo?.history) && trackingInfo.history.length > 0 ? (
+                    trackingInfo.history.map((event: any, idx: number) => (
+                      <div key={idx} className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="text-gray-500 text-sm">{event.date} {event.time}</div>
+                        <div className="flex-1">
+                          <div className="font-semibold text-lg">{event.description}</div>
+                        </div>
+                        <div>
+                          {getStatusIcon(trackingInfo.status)}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500">No timeline events available.</div>
+                  )}
+                </div>
             </div>
           </div>
         )}

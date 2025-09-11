@@ -6,8 +6,11 @@ type Props = {
   params: { slug: string }
 };
 
-// Generate metadata for the page
+// Ensure params are awaited before accessing properties
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!params || !params.slug) {
+    throw new Error("Invalid slug provided");
+  }
   const { slug } = params;
   const product = await fetchProductBySlug(slug);
   return {
@@ -17,19 +20,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductDetailPage({ params }: Props) {
-  const { slug } = params;
-  const product = await fetchProductBySlug(slug);
+  try {
+    if (!params || !params.slug) {
+      throw new Error('Product slug is required');
+    }
 
-  if (!product) {
+    const { slug } = params;
+    const product = await fetchProductBySlug(slug);
+
+    if (!product) {
+      return (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
+            <p className="mt-2 text-gray-600">
+              Sorry, we couldn't find the product you're looking for.
+              The product might have been removed or the URL might be incorrect.
+            </p>
+            <div className="mt-4">
+              <a
+                href="/category/all"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                Browse All Products
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return <ProductDetailClient product={product} />;
+  } catch (error) {
+    console.error('Error in ProductDetailPage:', error);
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
-          <p className="mt-2 text-gray-600">The product you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-gray-900">Something went wrong</h1>
+          <p className="mt-2 text-gray-600">
+            We encountered an error while loading the product.
+            Please try again later.
+          </p>
         </div>
       </div>
     );
   }
-
-  return <ProductDetailClient product={product} />;
 }

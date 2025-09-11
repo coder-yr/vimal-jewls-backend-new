@@ -28,17 +28,39 @@ export async function fetchCollections() {
 }
 
 // Fetch a product by slug from backend API
-export async function fetchProductBySlug(slug: string) {
+export async function fetchProductBySlug(slug: string | undefined): Promise<any> {
   try {
-    const res = await fetch(`http://localhost:7502/api/products/slug/${slug}`);
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Failed to fetch product by slug");
+    if (!slug || slug === 'undefined') {
+      console.error('Invalid slug provided:', slug);
+      return null;
     }
-    return await res.json();
+
+    const res = await fetch(`http://localhost:7502/api/products/slug/${encodeURIComponent(slug)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
+    if (!res.ok) {
+      if (res.status === 404) {
+        console.log(`Product not found with slug: ${slug}`);
+        return null;
+      }
+      const errorData = await res.json();
+      throw new Error(errorData.message || `Failed to fetch product with slug: ${slug}`);
+    }
+
+    const data = await res.json();
+    if (!data || Object.keys(data).length === 0) {
+      console.log(`No data received for slug: ${slug}`);
+      return null;
+    }
+
+    return data;
   } catch (error) {
     console.error("Error fetching product:", error);
-    throw new Error("Failed to fetch product by slug");
+    return null;
   }
 }
 

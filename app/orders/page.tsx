@@ -1,6 +1,6 @@
 "use client"
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useState, useEffect } from "react";
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -8,49 +8,41 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Package, Truck, CheckCircle, XCircle } from 'lucide-react'
 
 export default function MyOrdersPage() {
-  const router = useRouter();
+  useAuthGuard();
+  type OrderItem = { name: string; quantity: number; image: string };
+  type Order = {
+    id: string;
+    date: string;
+    total: string;
+    status: string;
+    items: OrderItem[];
+  };
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    if (typeof window !== "undefined" && !localStorage.getItem("token")) {
-      router.push("/auth/sign-in");
+    async function fetchOrders() {
+      try {
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        const res = await fetch("http://localhost:7502/api/orders", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch orders");
+        const data = await res.json();
+        setOrders(data.orders || []);
+      } catch (err) {
+        setError("Could not load orders. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [router]);
-  const orders = [
-    {
-      id: "ORD123456789",
-      date: "2024-07-20",
-      total: "₹33,626",
-      status: "Delivered",
-      items: [
-        { name: "Chandrak Diamond Stud Earrings", quantity: 1, image: "https://www.candere.com/media/jewellery/images/KC06683YG_2.jpeg" },
-      ],
-    },
-    {
-      id: "ORD987654321",
-      date: "2024-07-15",
-      total: "₹20,396",
-      status: "Shipped",
-      items: [
-        { name: "Scallop Gold Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/C/0/C022008_1.jpg" },
-      ],
-    },
-    {
-      id: "ORD112233445",
-      date: "2024-07-10",
-      total: "₹21,934",
-      status: "Processing",
-      items: [
-        { name: "Feather Scape Peacock Gold And Gemstone Earrings", quantity: 1, image: "https://www.candere.com/media/catalog/product/K/C/KC04453YG_1_5.jpeg" },
-      ],
-    },
-  ]
+    fetchOrders();
+  }, []);
 
   const getStatusIcon = (status: string) => {
-        const router = useRouter();
-        useEffect(() => {
-          if (typeof window !== "undefined" && !localStorage.getItem("token")) {
-            router.push("/auth/sign-in");
-          }
-        }, [router]);
     switch (status) {
       case "Delivered":
         return <CheckCircle className="w-5 h-5 text-green-500" />
