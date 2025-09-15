@@ -1,39 +1,13 @@
 const products = [
   // categoryId: 1=Rings, 2=Earrings, 3=Necklaces, 4=Bracelets, 5=Pendants, 6=Chains, 7=Toe Rings, 8=Mangalsutra
   // collectionId: 1=Festive, 2=Wedding, 3=Daily Wear, 4=Office Wear, 5=Party, 6=Traditional, 7=Modern
-  {
-    id: 1,
-    sizes: "",
-    shortcode: "elenai-gold-hoop-earrings",
-    slug: "elenai-gold-hoop-earrings",
-    name: "Elenai Gold Hoop Earrings",
-    categoryId: 2,
-    collectionId: 3,
-    description: "Make a statement with the Elenai Gold Hoop Earrings, designed in 14k gold. These earrings bring volume and edge to your look without compromising comfort.",
-    currentPrice: "12463",
-    originalPrice: "13552",
-    rating: 4.7,
-    reviews: 54,
-    images: [
-      { src: "https://www.candere.com/media/catalog/product/L/C/LCE0548_1.jpeg?optimize=medium&bg-color=255,255,255&fit=bounds&height=360&width=360&canvas=360:360", alt: "Elenai Gold Hoop Earrings Front" },
-    ],
-    badges: ["OUR PICK"],
-    youMayAlsoLike: [],
-    includedWithPurchase: [
-      { icon: "gift", text: "Gift Box" },
-      { icon: "book", text: "Care Tips" },
-      { icon: "check-circle", text: "Jewellery Certificate" },
-      { icon: "phone", text: "24x7 Customer Support" },
-    ],
-    productSummary: {
-      styleNo: "GE01005",
-      width: "0.25 cm (2.50 mm)",
-      height: "1.6 cm (16.00 mm)",
-      metalWeight: "1.51g",
-      grossWeight: "1.51g",
-    },
-    metalDetails: "*A differential amount will be applicable with difference in weight if any.",
-  },
+  // ...existing code...
+  // PATCH: Ensure every product has a slug property
+  // If slug is missing, use shortcode as fallback
+  ...products.map(p => ({
+    ...p,
+    slug: p.slug || p.shortcode || String(p.id)
+  })),
   {
     id: 2,
     sizes: "",

@@ -15,6 +15,7 @@ import shopFor from "../models/shopFor.js";
 import styles from "../models/styles.js";
 import subBanners from "../models/sub_banners.js";
 import adminLogs from "../models/admin_logs.js";
+import wishlist from "../models/wishlist.js";
 
 // CREATEs A DATABASE CONNECTION AND INSTANCE
 const createDatabaseReference = () => {
@@ -72,6 +73,7 @@ const createDatabaseReference = () => {
     orders: orders(sequelize),
     users: users(sequelize),
     adminLogs: adminLogs(sequelize, Sequelize.DataTypes),
+    wishlist: wishlist(sequelize),
   };
 
   // MAPPINGs

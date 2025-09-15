@@ -2,21 +2,24 @@ import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   return sequelize.define(
-    "categories",
+    "wishlist",
     {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
       },
-      slug: {
-        type: DataTypes.STRING,
+      userId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
+      },
+      productId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
-      tableName: "categories",
+      tableName: "wishlist",
       paranoid: true,
       omitNull: true,
       freezeTableName: true,

@@ -12,6 +12,7 @@ import usersRouter from "./routers/users.js";
 import bannersRouter from "./routers/banners.js";
 import homeRouter from "./routers/home.js";
 import db from "./db.js";
+import wishlistRouter from "./routers/wishlist.js";
 dotenv.config();
 
 const app = express();
@@ -24,7 +25,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static("images"));
-
 
 // API Routes
 
@@ -39,7 +39,7 @@ app.use("/api", usersRouter);
 app.use("/api/banners", bannersRouter);
 app.use("/api/home", homeRouter);
 app.use("/api", uploadRoutes);
-
+app.use("/api/wishlist", wishlistRouter);
 
 // Root Route
 app.get("/", (req, res) => {

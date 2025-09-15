@@ -11,46 +11,59 @@ router.get("/", async (req, res) => {
 // GET /api/products/slug/:slug - Get product details by slug
 router.get("/slug/:slug", async (req, res) => {
   try {
-    const product = await db.products.findOne({ where: { slug: req.params.slug } });
+    const product = await db.products.findOne({
+      where: { slug: req.params.slug },
+      raw: false // Get Sequelize instance
+    });
+
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({
+        message: "Product not found",
+        slug: req.params.slug
+      });
     }
 
-    // Parse the images string into an object
-    const productData = product.toJSON();
-    
-    // Parse the images JSON string if it exists and ensure it's an array
+    // Convert to plain object
+    let productData = product.toJSON();
+
+    // Handle images
     try {
-      let parsedImages;
-      // Handle both string and array cases
-      if (typeof productData.images === 'string') {
-        parsedImages = JSON.parse(productData.images);
-      } else {
-        parsedImages = productData.images;
-      }
+      let parsedImages = [];
       
-      // Ensure images is always an array of objects with src and alt
-      if (Array.isArray(parsedImages)) {
-        productData.images = parsedImages.map(img => {
-          if (typeof img === 'string') {
-            return { src: img, alt: productData.name || "Product Image" };
-          }
-          return {
-            src: img.src || "/placeholder.jpg",
-            alt: img.alt || productData.name || "Product Image"
-          };
-        });
-      } else if (parsedImages && typeof parsedImages === 'object') {
-        productData.images = [{
-          src: parsedImages.src || "/placeholder.jpg",
-          alt: parsedImages.alt || productData.name || "Product Image"
-        }];
+      if (productData.images) {
+        if (typeof productData.images === 'string') {
+          parsedImages = JSON.parse(productData.images);
+        } else {
+          parsedImages = productData.images;
+        }
+        
+        // Ensure images is always an array of objects with src and alt
+        if (Array.isArray(parsedImages)) {
+          productData.images = parsedImages.map(img => {
+            if (typeof img === 'string') {
+              return { src: img, alt: productData.name || "Product Image" };
+            }
+            return {
+              src: img.src || "/placeholder.jpg",
+              alt: img.alt || productData.name || "Product Image"
+            };
+          });
+        } else if (parsedImages && typeof parsedImages === 'object') {
+          productData.images = [{
+            src: parsedImages.src || "/placeholder.jpg",
+            alt: parsedImages.alt || productData.name || "Product Image"
+          }];
+        } else {
+          throw new Error('Invalid image data');
+        }
       } else {
-        throw new Error('Invalid image data');
+        productData.images = [{
+          src: "/placeholder.jpg",
+          alt: productData.name || "Product Image"
+        }];
       }
-    } catch (e) {
-      console.error('Error parsing images:', e);
-      // Default image if parsing fails
+    } catch (err) {
+      console.error('Error parsing product images:', err);
       productData.images = [{
         src: "/placeholder.jpg",
         alt: productData.name || "Product Image"
@@ -68,8 +81,11 @@ router.get("/slug/:slug", async (req, res) => {
     
     res.json(productData);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch product by slug" });
+    console.error('Error fetching product:', error);
+    res.status(500).json({
+      message: "Failed to fetch product",
+      error: error.message
+    });
   }
 });
 
