@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ProductInformation } from "@/components/product-information";
 
 interface ProductImage {
   src: string;
@@ -85,6 +86,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Carousel } from "@/components/ui/carousel";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import ProductSizeSelector from "@/components/product-size-selector";
 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -454,6 +456,38 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   );
   const [imageSlots, setImageSlots] = useState<(string | null)[]>([null, null, null]);
   const dispatch = useDispatch();
+  const [showSizeSelector, setShowSizeSelector] = useState(false);
+  const [selectedRingSize, setSelectedRingSize] = useState<number | null>(null);
+  const sampleSizeOptions = [
+    { sizeNumber: 7, diameter: 15, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 8, diameter: 15.3, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 9, diameter: 15.6, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 10, diameter: 15.9, availabilityStatus: "In Stock" as const },
+    { sizeNumber: 11, diameter: 16.2, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 12, diameter: 16.5, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 13, diameter: 16.8, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 14, diameter: 17.2, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 15, diameter: 17.5, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 16, diameter: 17.8, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 17, diameter: 18.1, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 18, diameter: 18.4, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 19, diameter: 18.8, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 20, diameter: 19.1, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 21, diameter: 19.4, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 22, diameter: 19.7, availabilityStatus: "Made to Order" as const },
+    { sizeNumber: 23, diameter: 20, availabilityStatus: "Made to Order" as const },
+  ];
+
+  const handleSizeSelect = (size: any) => {
+  setSelectedRingSize(size.sizeNumber);
+  console.log("Size selected:", size);
+  };
+
+  const handleConfirm = (selectedSize: any) => {
+  setSelectedRingSize(selectedSize.sizeNumber);
+  console.log("Confirmed size:", selectedSize);
+  setShowSizeSelector(false);
+  };
 
   const handleAddToCart = () => {
     dispatch(
@@ -464,20 +498,22 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         quantity: 1,
         image: Array.isArray(safeProduct.images) && safeProduct.images[0]?.src || "/placeholder.jpg",
         metal: "14K Yellow Gold (1.51g)", // Mock metal detail
+        ringSize: selectedRingSize,
       })
     );
-    alert("Item added to cart!");
+    alert(`Item added to cart!${selectedRingSize ? ' Size: ' + selectedRingSize : ''}`);
   };
 
   const handleBuyNow = () => {
     dispatch(
       addToCart({
-        id: String(safeProduct.id), // Convert to string to satisfy type
+        id: String(safeProduct.id),
         name: safeProduct.name,
         price: Number.parseFloat((safeProduct.currentPrice || "0").replace(/,/g, "")),
         quantity: 1,
         image: safeProduct.images[0].src,
-        metal: "14K Yellow Gold (1.51g)", // Mock metal detail
+        metal: "14K Yellow Gold (1.51g)",
+        ringSize: selectedRingSize,
       })
     );
     router.push("/checkout");
@@ -494,6 +530,29 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       }
       return updatedSlots;
     });
+  };
+
+  // Map product fields to ProductInformation's expected prop structure
+  const productInfoData = {
+    title: product.name,
+    description: product.description || "",
+    image: Array.isArray(product.images) ? product.images[0]?.src : product.images || "",
+    details: {
+      styleNo: product.shortcode || "",
+      ringSize: product.size || "",
+      metalWeight: product.metalWeight || "",
+      grossWeight: product.grossWeight || "",
+      metalDetails: product.metalDetails || [],
+      diamondDetails: product.diamondDetails || [],
+    },
+    priceBreakdown: {
+      metal: { original: Number(product.metalPrice) || 0, discounted: Number(product.metalDiscountedPrice) || undefined },
+      diamond: { original: Number(product.diamondPrice) || 0, discounted: Number(product.diamondDiscountedPrice) || undefined },
+      makingCharges: { original: Number(product.makingCharges) || 0, discounted: Number(product.makingChargesDiscounted) || undefined },
+      gst: { original: Number(product.gst) || 0, discounted: Number(product.gstDiscounted) || undefined },
+      grandTotal: Number(product.price) || Number(product.currentPrice) || Number(product.mrp) || 0,
+    },
+    grandTotal: Number(product.price) || Number(product.currentPrice) || Number(product.mrp) || 0,
   };
 
   return (
@@ -615,16 +674,13 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               >
                 Select Ring Size
               </label>
-              <Select defaultValue="12">
-                <SelectTrigger className="w-full rounded-md border border-gray-300 bg-white">
-                  <SelectValue placeholder="12 (16.5 mm)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="12">12 (16.5 mm)</SelectItem>
-                  <SelectItem value="13">13 (17.0 mm)</SelectItem>
-                  <SelectItem value="14">14 (17.5 mm)</SelectItem>
-                </SelectContent>
-              </Select>
+              <Button
+                variant="outline"
+                className="w-full rounded-md border border-gray-300 bg-white"
+                onClick={() => setShowSizeSelector(true)}
+              >
+                Choose Size
+              </Button>
               <Link
                 href="#"
                 className="text-xs text-[#009999] hover:underline mt-2 inline-block"
@@ -664,6 +720,45 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             </div>
           </div>
           <div className="hidden lg:block mt-6">
+      {showSizeSelector && (
+        <div className="fixed inset-0 z-50 flex items-end justify-end bg-[rgba(0,0,0,0.08)]">
+          <div className="bg-white shadow-2xl w-full max-w-lg h-full flex flex-col right-0 animate-slideIn relative">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white z-10">
+              <div>
+                <div className="text-2xl font-bold text-[#009999]">₹{safeProduct.currentPrice}</div>
+                <div className="text-base text-gray-500 line-through">₹{safeProduct.originalPrice}</div>
+              </div>
+              <div className="flex flex-col items-end">
+                <div className="text-sm text-gray-700">Delivery by <span className="font-semibold">7th Oct 2025</span></div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="mt-2"
+                  onClick={() => setShowSizeSelector(false)}
+                >
+                  ✕
+                </Button>
+              </div>
+            </div>
+            {/* Size Grid Only */}
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              <div className="mb-4 font-semibold text-lg">Pick your Size</div>
+              <ProductSizeSelector
+                currentPrice={Number(safeProduct.currentPrice?.replace(/,/g, "")) || 0}
+                originalPrice={Number(safeProduct.originalPrice?.replace(/,/g, "")) || 0}
+                currency="₹"
+                deliveryDate="7th Oct 2025"
+                sizeOptions={sampleSizeOptions}
+                onSizeSelect={handleSizeSelect}
+                onConfirm={handleConfirm}
+              />
+            </div>
+            {/* Sticky Confirm Button */}
+            {/* Confirm button removed; handled by ProductSizeSelector */}
+          </div>
+        </div>
+      )}
             <Button className="w-full bg-[#009999] text-white py-4 text-lg font-semibold rounded-lg">
               ADD TO CART
             </Button>
@@ -682,46 +777,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           ADD TO CART
         </Button>
       </div>
-      <main className="container mx-auto px-4 py-10">
-        <SectionHeader title="Product Information" underlineClassName="bg-teal-500" />
-        <div className="mt-10 grid gap-8 md:grid-cols-[320px,1fr]">
-          <div className="space-y-6">
-            <div className="flex items-start gap-6">
-              <Image 
-                src={Array.isArray(safeProduct.images) && safeProduct.images[0]?.src || "/placeholder.svg"} 
-                alt={Array.isArray(safeProduct.images) && safeProduct.images[0]?.alt || safeProduct.name} width={80} height={80} className="rounded-lg object-contain" />
-              <div>
-                <h3 className="font-semibold text-lg mb-2">✨Fashionable Glamour, Sparkling Elegance!</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description || "No description available."}
-                </p>
-              </div>
-            </div>
-            <ProductSummaryCard
-              data={Object.entries(safeProduct.productSummary || {}).reduce<{[key: string]: string}>(
-                (acc, [key, value]) => {
-                  acc[key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())] =
-                    value ? String(value) : "N/A";
-                  return acc;
-                },
-                {}
-              )}
-              note={<p className="text-xs text-gray-500">*Difference in gold weight may occur & will apply on final price.</p>}
-            />
-            <HelpCard />
-          </div>
-          <div>
-            <PriceBreakupAccordion
-              rows={product.priceBreakup || []}
-              grandTotal={product.grandTotal || "N/A"}
-              grandCaption="(MRP Incl. of all taxes)"
-            />
-            <p className="mt-6 text-sm text-muted-foreground">
-              *A differential amount will be applicable with difference in weight if any.
-            </p>
-          </div>
-        </div>
-      </main>
+      
       <div className="you-may-also-like-section grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {product.youMayAlsoLike?.map((item) => (
           <div key={item.id} className="flex flex-col items-center">
@@ -737,63 +793,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
         ))}
       </div>
-      <Tabs defaultValue="description" className="mt-8">
-        <TabsList className="flex justify-center bg-gray-100 p-2 rounded-lg shadow-md">
-          <TabsTrigger value="description" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
-            <span className="flex items-center gap-2">
-              <Book className="w-4 h-4" /> Description
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="specifications" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" /> Specifications
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="reviews" className="px-4 py-2 rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-teal-500">
-            <span className="flex items-center gap-2">
-              <Star className="w-4 h-4" /> Reviews
-            </span>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="description" className="p-4 bg-white rounded-lg shadow-md">
-          <p className="text-gray-700 leading-relaxed">{product.description}</p>
-        </TabsContent>
-        <TabsContent value="specifications" className="p-4 bg-white rounded-lg shadow-md">
-          <ul className="space-y-2">
-            {Object.entries(product.productSummary || {}).map(([key, value]) => (
-              <li key={key} className="text-sm flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>
-                  <strong>{key}:</strong> {String(value)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </TabsContent>
-        <TabsContent value="reviews" className="p-4 bg-white rounded-lg shadow-md">
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Customer Reviews</h3>
-            {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review, idx) => (
-                <div key={idx} className="border-b py-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    {[...Array(5)].map((_, starIdx) => (
-                      <Star
-                        key={starIdx}
-                        className={`w-4 h-4 ${starIdx < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm">{review.comment}</p>
-                  <p className="text-xs text-gray-500">- {review.author}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No reviews yet.</p>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+     
+      {/* Product Information Section */}
+      <ProductInformation product={productInfoData} />
     </div>
   );
 }

@@ -54,7 +54,9 @@ export default function CheckoutPage() {
                 <div className="flex-1 text-center sm:text-left">
                   <h3 className="font-semibold text-lg">{item.name}</h3>
                   <p className="text-sm text-gray-600">Metal: {item.metal}</p>
-                  <p className="text-sm text-gray-600">Size: {item.size}</p>
+                  {item.ringSize && (
+                    <p className="text-sm text-gray-600">Ring Size: {item.ringSize}</p>
+                  )}
                   <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                 </div>
                 <div className="flex flex-col items-center sm:items-end">

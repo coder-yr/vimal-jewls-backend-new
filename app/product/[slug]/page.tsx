@@ -8,10 +8,11 @@ type Props = {
 
 // Ensure params are awaited before accessing properties
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  if (!params || !params.slug) {
+  const awaitedParams = await params;
+  if (!awaitedParams || !awaitedParams.slug) {
     throw new Error("Invalid slug provided");
   }
-  const { slug } = params;
+  const { slug } = awaitedParams;
   const product = await fetchProductBySlug(slug);
   return {
     title: product?.name || "Product Not Found",
@@ -21,11 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   try {
-    if (!params || !params.slug) {
+    const awaitedParams = await params;
+    if (!awaitedParams || !awaitedParams.slug) {
       throw new Error('Product slug is required');
     }
 
-    const { slug } = params;
+    const { slug } = awaitedParams;
     const product = await fetchProductBySlug(slug);
 
     if (!product) {

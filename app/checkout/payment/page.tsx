@@ -24,10 +24,15 @@ export default function CheckoutPaymentPage() {
       alert("Missing address or cart items.");
       return;
     }
-    // Calculate total
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     // Get token
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) {
+      alert("You must be logged in to place an order. Please sign in.");
+      router.push("/auth/sign-in");
+      return;
+    }
+    // Calculate total
+    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     // Prepare order payload
     const orderPayload = {
       items: cartItems,

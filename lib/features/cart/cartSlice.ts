@@ -8,6 +8,7 @@ export interface CartItem {
   quantity: number
   image: string | StaticImageData
   metal: string // Example: "14K Yellow Gold (1.51g)"
+  ringSize?: number // Optional: selected ring size
 }
 
 interface CartState {
