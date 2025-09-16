@@ -54,7 +54,7 @@ export default function CategoryPage() {
         if (selectedPrices.length > 0) params.append('price', selectedPrices.join(','));
         if (selectedMaterials.length > 0) params.append('material', selectedMaterials.join(','));
         if (selectedStyles.length > 0) params.append('style', selectedStyles.join(','));
-        const url = `http://localhost:7502/api/categories/${slug}?${params.toString()}`;
+  const url = `https://vimal-jewls-backend-new.onrender.com/api/categories/${slug}?${params.toString()}`;
         const res = await fetch(url);
         if (!res.ok) {
           setCategory(null);
