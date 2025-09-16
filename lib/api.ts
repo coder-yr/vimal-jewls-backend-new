@@ -1,28 +1,28 @@
 // lib/api.ts
 // Fetch all products from backend API
 export async function fetchProducts() {
-  const res = await fetch("http://localhost:7502/api/products");
+  const res = await fetch("https://vimal-jewls-backend-new.onrender.com/api/products");
   if (!res.ok) throw new Error("Failed to fetch products");
   return await res.json();
 }
 
 // Fetch a product by ID from backend API
 export async function fetchProductById(id: string) {
-  const res = await fetch(`http://localhost:7502/api/products/${id}`);
+  const res = await fetch(`https://vimal-jewls-backend-new.onrender.com/api/products/${id}`);
   if (!res.ok) throw new Error("Failed to fetch product");
   return await res.json();
 }
 
 // Fetch all categories from backend API
 export async function fetchCategories() {
-  const res = await fetch("http://localhost:7502/api/categories");
+  const res = await fetch("https://vimal-jewls-backend-new.onrender.com/api/categories");
   if (!res.ok) throw new Error("Failed to fetch categories");
   return await res.json();
 }
 
 // Fetch all collections from backend API
 export async function fetchCollections() {
-  const res = await fetch("http://localhost:7502/api/collections");
+  const res = await fetch("https://vimal-jewls-backend-new.onrender.com/api/collections");
   if (!res.ok) throw new Error("Failed to fetch collections");
   return await res.json();
 }
@@ -35,7 +35,7 @@ export async function fetchProductBySlug(slug: string | undefined): Promise<any>
       return null;
     }
 
-    const res = await fetch(`http://localhost:7502/api/products/slug/${encodeURIComponent(slug)}`, {
+  const res = await fetch(`https://vimal-jewls-backend-new.onrender.com/api/products/slug/${encodeURIComponent(slug)}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -65,7 +65,7 @@ export async function fetchProductBySlug(slug: string | undefined): Promise<any>
 }
 
 export async function signupUser(data: { username: string; email: string; password: string }) {
-  const res = await fetch("http://localhost:7502/api/auth/signup", {
+  const res = await fetch("https://vimal-jewls-backend-new.onrender.com/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -74,7 +74,7 @@ export async function signupUser(data: { username: string; email: string; passwo
 }
 
 export async function signinUser(data: { email: string; password: string }) {
-  const res = await fetch("http://localhost:7502/api/auth/signin", {
+  const res = await fetch("https://vimal-jewls-backend-new.onrender.com/api/auth/signin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
