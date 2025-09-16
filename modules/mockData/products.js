@@ -1,13 +1,30 @@
 const products = [
+  {
+    id: 1001,
+    sizes: "",
+    shortcode: "elegant-gold-necklace",
+    slug: "elegant-gold-necklace",
+    name: "Elegant Gold Necklace",
+    categoryId: 3, // Necklaces
+    collectionId: 1,
+    description: "A beautifully crafted gold necklace for special occasions.",
+    currentPrice: "32000",
+    originalPrice: "35000",
+    rating: 4.8,
+    reviews: 12,
+    images: [
+      { src: "https://www.candere.com/media/jewellery/images/KC03933_1.jpeg", alt: "Elegant Gold Necklace" }
+    ],
+    badges: ["NEW"],
+    youMayAlsoLike: [],
+    includedWithPurchase: [],
+    productSummary: {},
+    metalDetails: "18k gold, traditional design.",
+    productDetails: { material: "gold", style: "traditional" }
+  },
   // categoryId: 1=Rings, 2=Earrings, 3=Necklaces, 4=Bracelets, 5=Pendants, 6=Chains, 7=Toe Rings, 8=Mangalsutra
   // collectionId: 1=Festive, 2=Wedding, 3=Daily Wear, 4=Office Wear, 5=Party, 6=Traditional, 7=Modern
   // ...existing code...
-  // PATCH: Ensure every product has a slug property
-  // If slug is missing, use shortcode as fallback
-  ...products.map(p => ({
-    ...p,
-    slug: p.slug || p.shortcode || String(p.id)
-  })),
   {
     id: 2,
     sizes: "",
