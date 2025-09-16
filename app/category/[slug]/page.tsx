@@ -3,6 +3,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+const FilterSidebar = dynamic(() => import("@/components/FilterSidebar"), { ssr: false });
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -38,12 +40,22 @@ export default function CategoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState<string[]>([]);
+  // Filter state
+  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:7502/api/categories/${slug}`);
+        // Build query params for filters
+        const params = new URLSearchParams();
+        if (selectedPrices.length > 0) params.append('price', selectedPrices.join(','));
+        if (selectedMaterials.length > 0) params.append('material', selectedMaterials.join(','));
+        if (selectedStyles.length > 0) params.append('style', selectedStyles.join(','));
+        const url = `http://localhost:7502/api/categories/${slug}?${params.toString()}`;
+        const res = await fetch(url);
         if (!res.ok) {
           setCategory(null);
           setProducts([]);
@@ -59,7 +71,7 @@ export default function CategoryPage() {
       setLoading(false);
     }
     if (slug) fetchData();
-  }, [slug]);
+  }, [slug, selectedPrices, selectedMaterials, selectedStyles]);
 
   const toggleWishlist = (productId: string) => {
     setWishlist((prevWishlist) =>
@@ -92,15 +104,75 @@ export default function CategoryPage() {
       </div>
 
       <div className="flex flex-col lg:flex-row flex-1">
-        {/* Left Sidebar - Filters (not implemented, backend does not provide filters) */}
-        <aside className="w-full lg:w-72 p-4 md:p-8 border-r border-gray-200 bg-white lg:h-[calc(100vh-150px)] lg:overflow-y-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">FILTERS</h2>
-            <span className="text-lg font-bold text-[#009999]">0</span>
-          </div>
-          <strong role="heading" aria-level={2} className="block-subtitle filter-subtitle mb-4">Shopping Options</strong>
-          <div className="text-gray-500">No filters available for this category.</div>
-        </aside>
+        {/* Left Sidebar - Filters */}
+        <FilterSidebar
+          filters={
+            <>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">FILTERS</h2>
+              </div>
+              <strong role="heading" aria-level={2} className="block-subtitle filter-subtitle mb-4">Shopping Options</strong>
+              {/* Filter: Price Range */}
+              <div className="mb-6">
+                <div className="font-semibold mb-2">Price</div>
+                <div className="flex flex-col gap-2">
+                  <label><input type="checkbox" value="under-5000" checked={selectedPrices.includes('under-5000')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedPrices(prev => checked ? [...prev, 'under-5000'] : prev.filter(v => v !== 'under-5000'));
+                  }} /> Under ₹5,000</label>
+                  <label><input type="checkbox" value="5000-10000" checked={selectedPrices.includes('5000-10000')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedPrices(prev => checked ? [...prev, '5000-10000'] : prev.filter(v => v !== '5000-10000'));
+                  }} /> ₹5,000 - ₹10,000</label>
+                  <label><input type="checkbox" value="10000-20000" checked={selectedPrices.includes('10000-20000')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedPrices(prev => checked ? [...prev, '10000-20000'] : prev.filter(v => v !== '10000-20000'));
+                  }} /> ₹10,000 - ₹20,000</label>
+                  <label><input type="checkbox" value="above-20000" checked={selectedPrices.includes('above-20000')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedPrices(prev => checked ? [...prev, 'above-20000'] : prev.filter(v => v !== 'above-20000'));
+                  }} /> Above ₹20,000</label>
+                </div>
+              </div>
+              {/* Filter: Material */}
+              <div className="mb-6">
+                <div className="font-semibold mb-2">Material</div>
+                <div className="flex flex-col gap-2">
+                  <label><input type="checkbox" value="gold" checked={selectedMaterials.includes('gold')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedMaterials(prev => checked ? [...prev, 'gold'] : prev.filter(v => v !== 'gold'));
+                  }} /> Gold</label>
+                  <label><input type="checkbox" value="silver" checked={selectedMaterials.includes('silver')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedMaterials(prev => checked ? [...prev, 'silver'] : prev.filter(v => v !== 'silver'));
+                  }} /> Silver</label>
+                  <label><input type="checkbox" value="diamond" checked={selectedMaterials.includes('diamond')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedMaterials(prev => checked ? [...prev, 'diamond'] : prev.filter(v => v !== 'diamond'));
+                  }} /> Diamond</label>
+                </div>
+              </div>
+              {/* Filter: Style */}
+              <div className="mb-6">
+                <div className="font-semibold mb-2">Style</div>
+                <div className="flex flex-col gap-2">
+                  <label><input type="checkbox" value="traditional" checked={selectedStyles.includes('traditional')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedStyles(prev => checked ? [...prev, 'traditional'] : prev.filter(v => v !== 'traditional'));
+                  }} /> Traditional</label>
+                  <label><input type="checkbox" value="modern" checked={selectedStyles.includes('modern')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedStyles(prev => checked ? [...prev, 'modern'] : prev.filter(v => v !== 'modern'));
+                  }} /> Modern</label>
+                  <label><input type="checkbox" value="casual" checked={selectedStyles.includes('casual')} onChange={e => {
+                    const checked = e.target.checked;
+                    setSelectedStyles(prev => checked ? [...prev, 'casual'] : prev.filter(v => v !== 'casual'));
+                  }} /> Casual</label>
+                </div>
+              </div>
+            </>
+          }
+        />
 
         {/* Right Content - Product Grid */}
         <main className="flex-1 p-4 md:p-8 bg-gray-50">
