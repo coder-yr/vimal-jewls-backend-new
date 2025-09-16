@@ -22,7 +22,8 @@ const createDatabaseReference = () => {
   dotenv.config();
   const config = {
     dialect: "mysql",
-    host: "127.0.0.1",
+    host: process.env.DATABASE_HOST || "127.0.0.1",
+    port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 3306,
     username: process.env.DATABASE_USER || "",
     password: process.env.DATABASE_PASSWORD || "",
     database: process.env.DATABASE_NAME || "",
@@ -44,6 +45,7 @@ const createDatabaseReference = () => {
     config.password,
     {
       host: config.host,
+      port: config.port,
       dialect: config.dialect,
       pool: {
         max: config.pool.max,
@@ -51,6 +53,12 @@ const createDatabaseReference = () => {
         acquire: config.pool.acquire,
         idle: config.pool.idle,
       },
+      dialectOptions: {
+        ssl: process.env.DATABASE_SSL === "true" ? {
+          require: true,
+          rejectUnauthorized: false
+        } : undefined
+      }
     }
   );
 
