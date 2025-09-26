@@ -21,6 +21,13 @@ if (!process.env.SESSION_SECRET_KEY) {
   process.env.SESSION_SECRET_KEY = "fallback-secret-change-in-production";
 }
 
+console.log("🔧 Environment check:", {
+  ADMINEMAIL: process.env.ADMINEMAIL ? `"${process.env.ADMINEMAIL}"` : "NOT SET",
+  PASSWORD_LENGTH: process.env.PASSWORD?.length || "NOT SET",
+  SESSION_SECRET_SET: !!process.env.SESSION_SECRET_KEY,
+  NODE_ENV: process.env.NODE_ENV || "development"
+});
+
 const DEFAULT_ADMIN = {
   email: process.env.ADMINEMAIL,
   password: process.env.PASSWORD,
@@ -30,7 +37,13 @@ const authenticate = async (email, password) => {
     email, 
     expectedEmail: DEFAULT_ADMIN.email,
     passwordLength: password?.length,
-    expectedPasswordLength: DEFAULT_ADMIN.password?.length 
+    expectedPasswordLength: DEFAULT_ADMIN.password?.length,
+    emailMatch: email === DEFAULT_ADMIN.email,
+    passwordMatch: password === DEFAULT_ADMIN.password,
+    actualPassword: `"${password}"`,
+    expectedPassword: `"${DEFAULT_ADMIN.password}"`,
+    passwordCharCodes: password ? Array.from(password).map(c => c.charCodeAt(0)) : [],
+    expectedCharCodes: DEFAULT_ADMIN.password ? Array.from(DEFAULT_ADMIN.password).map(c => c.charCodeAt(0)) : []
   });
   
   if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
