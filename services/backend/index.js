@@ -63,9 +63,109 @@ app.use("/api/wishlist", wishlistRouter);
 
 // AdminJS already mounted above
 
-// Root Route
+// Root Route with Admin Login Button
 app.get("/", (req, res) => {
-  res.send("Welcome to the Vimal Jewellers Backend!");
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Vimal Jewellers Backend</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          margin: 0;
+          padding: 0;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .container {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          text-align: center;
+          max-width: 400px;
+          width: 90%;
+        }
+        h1 {
+          color: #333;
+          margin-bottom: 1rem;
+          font-size: 1.8rem;
+        }
+        p {
+          color: #666;
+          margin-bottom: 2rem;
+          font-size: 1rem;
+        }
+        .admin-btn {
+          background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+          color: white;
+          padding: 12px 30px;
+          border: none;
+          border-radius: 6px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+          display: inline-block;
+          transition: all 0.3s ease;
+          margin-bottom: 1rem;
+        }
+        .admin-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(238, 90, 36, 0.4);
+        }
+        .status {
+          background: #f8f9fa;
+          padding: 1rem;
+          border-radius: 6px;
+          margin-top: 1.5rem;
+          color: #495057;
+          font-size: 0.9rem;
+        }
+        .api-info {
+          margin-top: 1rem;
+          padding: 1rem;
+          background: #e9ecef;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          color: #6c757d;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>🏪 Vimal Jewellers Backend</h1>
+        <p>Backend API is running successfully</p>
+        
+        <a href="/admin" class="admin-btn">
+          🔐 Login as Admin
+        </a>
+        
+        <div class="status">
+          <strong>Status:</strong> ✅ Active<br>
+          <strong>Port:</strong> ${process.env.PORT || 7502}<br>
+          <strong>Environment:</strong> ${process.env.NODE_ENV || 'development'}
+        </div>
+        
+        <div class="api-info">
+          <strong>API Endpoints:</strong><br>
+          • <code>/api/products</code><br>
+          • <code>/api/categories</code><br>
+          • <code>/api/collections</code><br>
+          • <code>/api/auth</code><br>
+          • <code>/admin</code> - Admin Panel
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  res.send(html);
 });
 
 // Fallback Route for undefined routes
