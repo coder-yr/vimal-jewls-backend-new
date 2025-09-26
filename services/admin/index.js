@@ -14,14 +14,30 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
+
+// Add SESSION_SECRET_KEY fallback for production
+if (!process.env.SESSION_SECRET_KEY) {
+  console.warn("⚠️  SESSION_SECRET_KEY not set - using fallback. Set this in production!");
+  process.env.SESSION_SECRET_KEY = "fallback-secret-change-in-production";
+}
+
 const DEFAULT_ADMIN = {
   email: process.env.ADMINEMAIL,
   password: process.env.PASSWORD,
 };
 const authenticate = async (email, password) => {
+  console.log("🔐 Admin login attempt:", { 
+    email, 
+    expectedEmail: DEFAULT_ADMIN.email,
+    passwordLength: password?.length,
+    expectedPasswordLength: DEFAULT_ADMIN.password?.length 
+  });
+  
   if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    console.log("✅ Admin login successful");
     return Promise.resolve(DEFAULT_ADMIN);
   }
+  console.log("❌ Admin login failed - credentials mismatch");
   return null;
 };
 // Factory to build Admin router; allows mounting under another Express app

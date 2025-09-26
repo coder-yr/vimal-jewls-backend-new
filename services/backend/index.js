@@ -17,13 +17,42 @@ import { buildAdminRouter } from "../admin/index.js";
 dotenv.config();
 
 const app = express();
+
+// Environment-driven CORS configuration
+const getCorsOrigins = () => {
+  const defaultOrigins = [
+    "http://localhost:3000",
+    "http://localhost:7503", 
+    "https://elegant-pavlova-e96b18.netlify.app"
+  ];
+  
+  const envOrigins = [];
+  
+  // Add environment-specific origins
+  if (process.env.FRONTEND_ORIGIN) {
+    envOrigins.push(process.env.FRONTEND_ORIGIN);
+  }
+  if (process.env.ADMIN_ORIGIN) {
+    envOrigins.push(process.env.ADMIN_ORIGIN);
+  }
+  if (process.env.CORS_ORIGINS) {
+    envOrigins.push(...process.env.CORS_ORIGINS.split(',').map(o => o.trim()));
+  }
+  
+  // Always include the current domain for Render
+  if (process.env.RENDER_EXTERNAL_URL) {
+    envOrigins.push(process.env.RENDER_EXTERNAL_URL);
+  }
+  
+  // For Render, also include the service URL
+  envOrigins.push("https://vimal-jewls-backend-new.onrender.com");
+  
+  return [...new Set([...defaultOrigins, ...envOrigins])].filter(Boolean);
+};
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:7503",
-      "https://elegant-pavlova-e96b18.netlify.app"
-    ],
+    origin: getCorsOrigins(),
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   })
@@ -31,13 +60,7 @@ app.use(
 // Mount AdminJS early, before body parsers, per AdminJS guidance
 const adminRouter = await buildAdminRouter({
   rootPath: "/admin",
-  corsOrigins: [
-    "http://localhost:3000",
-    "http://localhost:7503",
-    "https://elegant-pavlova-e96b18.netlify.app",
-    process.env.FRONTEND_ORIGIN,
-    process.env.ADMIN_ORIGIN,
-  ].filter(Boolean),
+  corsOrigins: getCorsOrigins(),
 });
 app.use("/", adminRouter);
 
