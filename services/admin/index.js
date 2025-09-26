@@ -5,10 +5,14 @@ import db from "./db.js";
 import AdminJSExpress from "@adminjs/express";
 import * as AdminJSSequelize from "@adminjs/sequelize";
 import AdminJS from "adminjs";
-import bodyParser from "body-parser";
+// use express.json() instead of body-parser to avoid extra dependency at root
 import MySQLStore from "express-mysql-session";
 import session from "express-session";
 import { components, loader } from "./component_loader.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 const DEFAULT_ADMIN = {
   email: process.env.ADMINEMAIL,
@@ -20,23 +24,29 @@ const authenticate = async (email, password) => {
   }
   return null;
 };
-// EXPRESS APP
-const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
+// Factory to build Admin router; allows mounting under another Express app
+export async function buildAdminRouter({
+  rootPath = "/admin",
+  corsOrigins = ["http://localhost:3000"],
+} = {}) {
+  const router = express.Router();
+  router.use(
+    cors({
+      origin: corsOrigins,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    })
+  );
 
-app.use("/public", express.static("public"));
+  // static assets for custom components, served under the admin path
+  router.use(`${rootPath}/public`, express.static(path.join(__dirname, "public")));
 // TODO comment this
 // db.sequelize.sync({ force: true });
 
-AdminJS.registerAdapter(AdminJSSequelize);
-const admin = new AdminJS({
-  rootPath: "/",
-  databases: [db],
+  AdminJS.registerAdapter(AdminJSSequelize);
+  const admin = new AdminJS({
+    rootPath,
+    databases: [db],
   settings: {
     defaultPerPage: 10,
   },
@@ -286,11 +296,11 @@ const admin = new AdminJS({
       },
     },
   ],
-  loginPath: "/login",
+  loginPath: `${rootPath}/login`,
   branding: {
     companyName: "Vimal Jewellers",
-    favicon: "./public/logo.svg",
-    logo: "./public/logo.svg",
+    favicon: `${rootPath}/public/logo.svg`,
+    logo: `${rootPath}/public/logo.svg`,
     withMadeWithLove: false,
   },
   version: {
@@ -302,17 +312,27 @@ const admin = new AdminJS({
     component: components.DashboardComponent,
   },
   assets: {
-    styles: ["./public/custom_style.css"],
+    styles: [`${rootPath}/public/custom_style.css`],
   },
-  logoutPath: "/logout",
-});
+  logoutPath: `${rootPath}/logout`,
+  });
 
-await admin.watch();
+  // Build AdminJS frontend bundles before mounting
+  if (typeof admin.initialize === "function") {
+    await admin.initialize();
+  }
+  // In dev, rebuild AdminJS bundle when components change (non-blocking)
+  if (process.env.ADMIN_WATCH === "true" && typeof admin.watch === "function") {
+    admin.watch().catch((e) => {
+      console.warn("AdminJS watch failed:", e?.message || e);
+    });
+  }
 
 // MYSQL SESSION
 const config = {
   dialect: "mysql",
-  host: "127.0.0.1",
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
@@ -325,41 +345,61 @@ const config = {
   migrations: {
     path: "./migrations",
   },
+  ssl: {
+    rejectUnauthorized: true
+  },
 };
 const mysqlStore = MySQLStore(session);
 const sessionStore = new mysqlStore({
   host: config.host,
-  port: 3306,
+  port: config.port,
   user: config.username,
   password: config.password,
   database: config.database,
-});
-
-// building router
-const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
-  admin,
-  {
-    authenticate,
-    cookieName: "getnglow",
-    cookiePassword: "sessionsecret",
+  ssl: {
+    rejectUnauthorized: true
   },
-  null,
-  {
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET_KEY,
-    cookie: {
-      maxAge: 86400000,
-    },
-  }
-);
-app.use(admin.options.rootPath, adminRouter);
-app.use(bodyParser.json());
-
-const PORT = process.env.PORT || 7503;
-app.listen(PORT, () => {
-  console.log(
-    `🚀 Vimal Jewellers Admin Panel running at http://localhost:${PORT} `
-  );
 });
+
+// building router (debug middleware can be added here if needed)
+
+  // Quick health check and debug logs for admin mount
+  router.get(`${rootPath}/health`, (req, res) => {
+    res.json({ ok: true, rootPath, time: new Date().toISOString() });
+  });
+  router.use(rootPath, (req, _res, next) => {
+    if (process.env.DEBUG_ADMIN === "true") {
+      console.log(`[Admin] ${req.method} ${req.originalUrl}`);
+    }
+    next();
+  });
+
+  const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
+    admin,
+    {
+      authenticate,
+      cookieName: "getnglow",
+      cookiePassword: "sessionsecret",
+    },
+    null,
+    {
+      store: sessionStore,
+      resave: false,
+      saveUninitialized: true,
+      secret: process.env.SESSION_SECRET_KEY,
+      cookie: {
+        maxAge: 86400000,
+      },
+    }
+  );
+  router.use(admin.options.rootPath, adminRouter);
+  router.use(express.json());
+
+  // Debugging: log errors
+  router.use((err, req, res, next) => {
+    console.error("AdminJS error:", err);
+    next(err);
+  });
+
+  return router;
+}

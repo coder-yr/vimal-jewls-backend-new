@@ -13,6 +13,7 @@ import bannersRouter from "./routers/banners.js";
 import homeRouter from "./routers/home.js";
 import db from "./db.js";
 import wishlistRouter from "./routers/wishlist.js";
+import { buildAdminRouter } from "../admin/index.js";
 dotenv.config();
 
 const app = express();
@@ -20,12 +21,27 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "http://localhost:7503",
       "https://elegant-pavlova-e96b18.netlify.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   })
 );
+// Mount AdminJS early, before body parsers, per AdminJS guidance
+const adminRouter = await buildAdminRouter({
+  rootPath: "/admin",
+  corsOrigins: [
+    "http://localhost:3000",
+    "http://localhost:7503",
+    "https://elegant-pavlova-e96b18.netlify.app",
+    process.env.FRONTEND_ORIGIN,
+    process.env.ADMIN_ORIGIN,
+  ].filter(Boolean),
+});
+app.use("/", adminRouter);
+
+// Body parsers and other middleware AFTER AdminJS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static("images"));
@@ -44,6 +60,8 @@ app.use("/api/banners", bannersRouter);
 app.use("/api/home", homeRouter);
 app.use("/api", uploadRoutes);
 app.use("/api/wishlist", wishlistRouter);
+
+// AdminJS already mounted above
 
 // Root Route
 app.get("/", (req, res) => {
